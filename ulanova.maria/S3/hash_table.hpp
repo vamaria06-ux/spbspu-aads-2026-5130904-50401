@@ -44,6 +44,12 @@ namespace ulanova
     size_t size_;
     Hash hash_;
     Equal equal_;
+
+    static const size_t npos = static_cast<size_t>(-1);
+
+    size_t findIndex(const Key& key) const;
+    size_t findPlace(const Key& key, bool& found) const;
+    size_t nextIndex(size_t index) const noexcept;
   };
 }
 template <class Key, class Value, class Hash, class Equal>
@@ -87,5 +93,36 @@ template <class Key, class Value, class Hash, class Equal>
 size_t ulanova::HashTable<Key, Value, Hash, Equal>::getcapacity() const noexcept
 {
   return buckets_.getsize();
+}
+
+template <class Key, class Value, class Hash, class Equal>
+size_t ulanova::HashTable<Key, Value,Hash,Equal>::nextIndex(size_t index) const noexcept
+{
+  return (index + 1) % buckets_.getsize();
+}
+
+template <class Key, class Value, class Hash, class Equal>
+size_t ulanova::HashTable<Key,Value, Hash, Equal>::findIndex(const Key& key) const
+{
+  if (buckets_.isEmpty())
+  {
+    return npos;
+  }
+  size_t index = hash_(key) % buckets_.getsize();
+  for (size_t i = 0; i < buckets_.getsize(); ++i)
+  {
+    const Bucket& bucket = buckets_[index];
+    if (bucket.state == BucketState::Empty)
+    {
+      return npos;
+    }
+    if (bucket.state == BucketState::Occupied && equal_(bucket.key, key))
+    {
+      return index;
+    }
+    index = nextIndex(index);
+  }
+  return npos;
+
 }
 #endif
