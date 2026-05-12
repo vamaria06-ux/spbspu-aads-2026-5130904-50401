@@ -3,6 +3,8 @@
 
 #include <cstddef>
 #include <utility>
+#include <stdexcept>
+#include <memory>
 
 #include "top_it_vector.hpp"
 
@@ -19,6 +21,13 @@ namespace ulanova
     bool isEmpty() const noexcept;
     size_t getsize() const noexcept;
     size_t getcapacity() const noexcept;
+
+    void add(const Key& key, const Value& value);
+    Value drop(const Key& key);
+    bool has(const Key& key) const;
+
+    Value* find(const Key& key);
+    const Value* find (const Key& key) const;
 
   private:
     enum class BucketState
@@ -156,4 +165,71 @@ size_t ulanova::HashTable<Key, Value, Hash, Equal>::findPlace(const Key& key, bo
   }
   return firstDeleted;
 }
+
+template <class Key, class Value, class Hash, class Equal>
+void ulanova::HashTable<Key,Value,Hash,Equal>::add(const Key& key, const Value& value)
+{
+  bool found = false;
+  size_t index = findPlace(key,found);
+
+  if (index == npos)
+  {
+    throw std::overflow_error("hash table has no free slots");
+  }
+
+  Bucket& bucket = buckets_[index];
+  if (found)
+  {
+    bucket.value = value;
+    return;
+  }
+  bucket.key = key;
+  bucket.value = value;
+  bucket.state = BucketState::Occupied;
+  ++size_;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+Value ulanova::HashTable<Key,Value,Hash,Equal>::drop(const Key& key)
+{
+  size_t index = findIndex(key);
+  if (index == npos)
+  {
+    throw std::out_of_range("key not found");
+  }
+  Bucket& bucket = buckets_[index];
+  Value result = bucket.value;
+  bucket.state = BucketState::Deleted;
+  --size_;
+  return result;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+Value* ulanova::HashTable<Key,Value,Hash,Equal>::find(const Key& key)
+{
+  size_t index = findIndex(key);
+  if (index == npos)
+  {
+    return nullptr;
+  }
+  return std::addressof(buckets_[index].value);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+bool ulanova::HashTable<Key,Value,Hash,Equal>::has(const Key& key) const
+{
+  return findIndex(key) != npos;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+const Value* ulanova::HashTable<Key,Value,Hash,Equal>::find(const Key& key) const
+{
+  size_t index = findIndex(key);
+  if (index == npos)
+  {
+    return nullptr;
+  }
+  return std::addressof(buckets_[index].value);
+}
+
 #endif
