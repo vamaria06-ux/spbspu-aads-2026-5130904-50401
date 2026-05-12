@@ -125,4 +125,35 @@ size_t ulanova::HashTable<Key,Value, Hash, Equal>::findIndex(const Key& key) con
   return npos;
 
 }
+template <class Key, class Value, class Hash, class Equal>
+size_t ulanova::HashTable<Key, Value, Hash, Equal>::findPlace(const Key& key, bool& found ) const
+{
+  found = false;
+  if (buckets_.isEmpty())
+  {
+    return npos;
+  }
+  size_t index = hash_(key) % buckets_.getsize();
+  size_t firstDeleted = npos;
+
+  for (size_t i = 0; i < buckets_.getsize(); ++i)
+  {
+    const Bucket& bucket = buckets_[index];
+    if (bucket.state == BucketState::Occupied && equal_(bucket.key, key))
+    {
+      found = true;
+      return index;
+    }
+    if (bucket.state == BucketState::Deleted && firstDeleted == npos)
+    {
+      firstDeleted = index;
+    }
+    if (bucket.state == BucketState::Empty)
+    {
+      return firstDeleted == npos ? index : firstDeleted;
+    }
+    index = nextIndex(index);
+  }
+  return firstDeleted;
+}
 #endif
