@@ -29,6 +29,8 @@ namespace ulanova
     Value* find(const Key& key);
     const Value* find (const Key& key) const;
 
+    void rehash(size_t slots);
+
   private:
     enum class BucketState
     {
@@ -230,6 +232,25 @@ const Value* ulanova::HashTable<Key,Value,Hash,Equal>::find(const Key& key) cons
     return nullptr;
   }
   return std::addressof(buckets_[index].value);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+void ulanova::HashTable<Key,Value,Hash,Equal>::rehash(size_t slots)
+{
+  if (slots < size_)
+  {
+    throw std::invalid_argument("new hash table capacity is too small");
+  }
+  HashTable tmp(slots,hash_,equal_);
+
+  for(size_t i = 0; i < buckets_.getsize(); ++i)
+  {
+    if (buckets_[i].state == BucketState::Occupied)
+    {
+      tmp.add(buckets_[i].key,buckets_[i].value);
+    }
+  }
+  swap(tmp);
 }
 
 #endif
