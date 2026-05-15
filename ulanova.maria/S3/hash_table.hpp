@@ -18,6 +18,11 @@ namespace ulanova
 
     explicit HashTable(size_t slots = 8);
     HashTable(size_t slots, const Hash& hash, const Equal& equal);
+    HashTable(const HashTable& rhs);
+    HashTable(HashTable&& rhs) noexcept;
+
+    HashTable& operator=(const HashTable& rhs);
+    HashTable& operator=(HashTable&& rhs) noexcept;
 
     void swap(HashTable& rhs) noexcept;
 
@@ -130,6 +135,53 @@ ulanova::HashTable<Key, Value, Hash, Equal>::HashTable(size_t slots, const Hash&
   hash_(hash),
   equal_(equal)
 {}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable& rhs):
+  buckets_(rhs.buckets_),
+  size_(rhs.size_),
+  hash_(rhs.hash_),
+  equal_(rhs.equal_)
+{}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>::HashTable(HashTable&& rhs) noexcept:
+  buckets_(std::move(rhs.buckets_)),
+  size_(rhs.size_),
+  hash_(std::move(rhs.hash_)),
+  equal_(std::move(rhs.equal_))
+{
+  rhs.size_ = 0;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>&
+ulanova::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable& rhs)
+{
+  if (this == std::addressof(rhs))
+  {
+    return *this;
+  }
+
+  HashTable cpy(rhs);
+  swap(cpy);
+  return *this;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>&
+ulanova::HashTable<Key, Value, Hash, Equal>::operator=(HashTable&& rhs) noexcept
+{
+  if (this == std::addressof(rhs))
+  {
+    return *this;
+  }
+
+  HashTable cpy(std::move(rhs));
+  swap(cpy);
+  return *this;
+}
+
 
 template <class Key, class Value, class Hash, class Equal>
 void ulanova::HashTable<Key, Value, Hash, Equal>::swap(HashTable& rhs) noexcept
