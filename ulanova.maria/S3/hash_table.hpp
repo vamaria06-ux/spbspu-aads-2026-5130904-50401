@@ -125,7 +125,7 @@ namespace ulanova
 }
 template <class Key, class Value, class Hash, class Equal>
 ulanova::HashTable<Key, Value, Hash, Equal>::HashTable(size_t slots):
-  buckets_(slots),
+  buckets_(slots, Bucket()),
   size_(0),
   hash_(),
   equal_()
@@ -133,7 +133,7 @@ ulanova::HashTable<Key, Value, Hash, Equal>::HashTable(size_t slots):
 
 template <class Key, class Value, class Hash, class Equal>
 ulanova::HashTable<Key, Value, Hash, Equal>::HashTable(size_t slots, const Hash& hash, const Equal& equal):
-  buckets_(slots),
+  buckets_(slots, Bucket()),
   size_(0),
   hash_(hash),
   equal_(equal)
