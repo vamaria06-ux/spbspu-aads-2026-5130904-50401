@@ -23,14 +23,14 @@ namespace ulanova
   class HmacHash
   {
     HmacHash():
-      hmac_(defaultKey(), defaultKeySize());
+      hmac_(defaultKey(), defaultKeySize())
     {}
 
     HmacHash(const unsigned char* Key, size_t size):
       hmac_(key, size)
     {}
 
-    size_t operator()(cosnt T& value) const
+    size_t operator()(const T& value) const
     {
       boost::hash2::hmac_sha2_256 hmac(hmac_);
       boost::hash2::hash_append(hmac, {}, value);
