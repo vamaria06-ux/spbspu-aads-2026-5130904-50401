@@ -13,6 +13,7 @@ namespace ulanova
   template <class Key, class Value, class Hash, class Equal>
   class HashTable
   {
+  public:
     class iterator;
     class const_iterator;
 
@@ -81,6 +82,7 @@ namespace ulanova
   template <class Key, class Value, class Hash, class Equal>
   class HashTable<Key,Value,Hash,Equal>::iterator
   {
+  public:
     iterator();
     iterator(HashTable* table, size_t index);
 
@@ -101,6 +103,7 @@ namespace ulanova
   template <class Key, class Value, class Hash, class Equal>
   class HashTable<Key, Value, Hash, Equal>::const_iterator
   {
+  public:
     const_iterator();
     const_iterator(const HashTable* table, size_t index);
 

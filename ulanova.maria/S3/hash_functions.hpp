@@ -22,6 +22,7 @@ namespace ulanova
   template <class T>
   class HmacHash
   {
+  public:
     HmacHash():
       hmac_(defaultKey(), defaultKeySize())
     {}
