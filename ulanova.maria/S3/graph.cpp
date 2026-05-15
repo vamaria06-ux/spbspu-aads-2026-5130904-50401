@@ -157,4 +157,82 @@ namespace ulanova
 
     return *edges;
   }
+
+    Graph Graph::merge(const std::string& name, const Graph& lhs, const Graph& rhs)
+  {
+    Graph result(name);
+
+    Vector<std::string> lhsVertices = lhs.getVertices();
+    for (auto it = lhsVertices.begin(); it != lhsVertices.end(); ++it)
+    {
+      result.addVertex(*it);
+    }
+
+    Vector<std::string> rhsVertices = rhs.getVertices();
+    for (auto it = rhsVertices.begin(); it != rhsVertices.end(); ++it)
+    {
+      result.addVertex(*it);
+    }
+
+    for (auto it = lhs.outbound_.cbegin(); it != lhs.outbound_.cend(); ++it)
+    {
+      const std::string& from = it.key();
+      const Vector<Edge>& edges = it.value();
+
+      for (auto edgeIt = edges.begin(); edgeIt != edges.end(); ++edgeIt)
+      {
+        result.addEdge(from, edgeIt->vertex, edgeIt->weight);
+      }
+    }
+
+    for (auto it = rhs.outbound_.cbegin(); it != rhs.outbound_.cend(); ++it)
+    {
+      const std::string& from = it.key();
+      const Vector<Edge>& edges = it.value();
+
+      for (auto edgeIt = edges.begin(); edgeIt != edges.end(); ++edgeIt)
+      {
+        result.addEdge(from, edgeIt->vertex, edgeIt->weight);
+      }
+    }
+
+    return result;
+  }
+
+  Graph Graph::extract(const std::string& name, const Vector<std::string>& vertices) const
+  {
+    Graph result(name);
+
+    for (auto it = vertices.begin(); it != vertices.end(); ++it)
+    {
+      if (!hasVertex(*it))
+      {
+        throw std::out_of_range("vertex not found");
+      }
+
+      result.addVertex(*it);
+    }
+
+    for (auto it = vertices.begin(); it != vertices.end(); ++it)
+    {
+      const std::string& from = *it;
+      const Vector<Edge>* edges = outbound_.find(from);
+
+      if (edges == nullptr)
+      {
+        continue;
+      }
+
+      for (auto edgeIt = edges->begin(); edgeIt != edges->end(); ++edgeIt)
+      {
+        if (result.hasVertex(edgeIt->vertex))
+        {
+          result.addEdge(from, edgeIt->vertex, edgeIt->weight);
+        }
+      }
+    }
+
+    return result;
+  }
+
 }

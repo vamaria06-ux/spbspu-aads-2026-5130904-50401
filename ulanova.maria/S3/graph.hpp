@@ -39,6 +39,10 @@ namespace ulanova
     Vector<Edge> getOutbound(const std::string& vertex) const;
     Vector<Edge> getInbound(const std::string& vertex) const;
 
+    static Graph merge(const std::string& name, const Graph& lhs, const Graph& rhs);
+    Graph extract(const std::string& name, const Vector<std::string>& vertices) const;
+
+
   private:
     std::string name_;
 
