@@ -371,6 +371,17 @@ void ulanova::Vector<T>::insert(size_t i, const Vector<T>& rhs, size_t start, si
 }
 
 template <class T>
+void ulanova::Vector<T>::erase(size_t i)
+{
+  if (i >= size_)
+  {
+    throw std::out_of_range("bad erase");
+  }
+
+  erase(i, i + 1);
+}
+
+template <class T>
 void ulanova::Vector<T>::erase(size_t start, size_t end)
 {
   if (start > end || end > size_)
