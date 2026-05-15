@@ -26,7 +26,7 @@ namespace ulanova
       hmac_(defaultKey(), defaultKeySize())
     {}
 
-    HmacHash(const unsigned char* Key, size_t size):
+    HmacHash(const unsigned char* key, size_t size):
       hmac_(key, size)
     {}
 
