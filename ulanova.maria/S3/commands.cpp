@@ -11,6 +11,7 @@ namespace ulanova
     handlers_()
   {
     handlers_["graphs"] = &CommandProcessor::handleGraphs;
+    handlers_["vertexes"] = &CommandProcessor::handleVertices;
     handlers_["vertices"] = &CommandProcessor::handleVertices;
     handlers_["outbound"] = &CommandProcessor::handleOutbound;
     handlers_["inbound"] = &CommandProcessor::handleInbound;
@@ -126,6 +127,32 @@ namespace ulanova
     });
   }
 
+  void CommandProcessor::printEdges(const Vector<Edge>& edges, std::ostream& output)
+  {
+    if (edges.isEmpty())
+    {
+      output << '\n';
+      return;
+    }
+
+    size_t i = 0;
+
+    while (i < edges.getsize())
+    {
+      output << edges[i].vertex << ' ' << edges[i].weight;
+
+      size_t j = i + 1;
+      while (j < edges.getsize() && edges[j].vertex == edges[i].vertex)
+      {
+        output << ' ' << edges[j].weight;
+        ++j;
+      }
+
+      output << '\n';
+      i = j;
+    }
+  }
+
   void CommandProcessor::printInvalid(std::ostream& output)
   {
     output << "<INVALID COMMAND>\n";
@@ -141,6 +168,12 @@ namespace ulanova
 
     Vector<std::string> names = storage_.getGraphNames();
     sortStrings(names);
+
+    if (names.isEmpty())
+    {
+      output << '\n';
+      return;
+    }
 
     for (auto it = names.begin(); it != names.end(); ++it)
     {
@@ -166,6 +199,11 @@ namespace ulanova
 
     Vector<std::string> vertices = graph->getVertices();
     sortStrings(vertices);
+    if (vertices.isEmpty())
+    {
+      output << '\n';
+      return;
+    }
 
     for (auto it = vertices.begin(); it != vertices.end(); ++it)
     {
@@ -191,11 +229,8 @@ namespace ulanova
 
     Vector<Edge> edges = graph->getOutbound(args[2]);
     sortEdges(edges);
+    printEdges(edges, output);
 
-    for (auto it = edges.begin(); it != edges.end(); ++it)
-    {
-      output << it->vertex << ' ' << it->weight << '\n';
-    }
   }
 
   void CommandProcessor::handleInbound(const Args& args, std::ostream& output)
@@ -216,11 +251,8 @@ namespace ulanova
 
     Vector<Edge> edges = graph->getInbound(args[2]);
     sortEdges(edges);
+    printEdges(edges, output);
 
-    for (auto it = edges.begin(); it != edges.end(); ++it)
-    {
-      output << it->vertex << ' ' << it->weight << '\n';
-    }
   }
 
   void CommandProcessor::handleBind(const Args& args, std::ostream&)

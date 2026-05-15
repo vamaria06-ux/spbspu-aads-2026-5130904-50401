@@ -40,6 +40,7 @@ namespace ulanova
 
     static void sortStrings(Vector<std::string>& values);
     static void sortEdges(Vector<Edge>& edges);
+    static void printEdges(const Vector<Edge>& edges, std::ostream& output);
     static void printInvalid(std::ostream& output);
   };
 }
