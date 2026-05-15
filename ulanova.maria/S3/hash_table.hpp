@@ -13,6 +13,9 @@ namespace ulanova
   template <class Key, class Value, class Hash, class Equal>
   class HashTable
   {
+    class iterator;
+    class const_iterator;
+
     explicit HashTable(size_t slots = 8);
     HashTable(size_t slots, const Hash& hash, const Equal& equal);
 
@@ -30,6 +33,13 @@ namespace ulanova
     const Value* find (const Key& key) const;
 
     void rehash(size_t slots);
+
+    iterator begin() noexcept;
+    iterator end() noexcept;
+    const_iterator begin() const noexcept;
+    const_iterator end() const noexcept;
+    const_iterator cbegin() const noexcept;
+    const_iterator cend() const noexcept;
 
   private:
     enum class BucketState
@@ -61,6 +71,48 @@ namespace ulanova
     size_t findIndex(const Key& key) const;
     size_t findPlace(const Key& key, bool& found) const;
     size_t nextIndex(size_t index) const noexcept;
+  };
+
+  template <class Key, class Value, class Hash, class Equal>
+  class HashTable<Key,Value,Hash,Equal>::iterator
+  {
+    iterator();
+    iterator(HashTable* table, size_t index);
+
+    iterator& operator++();
+    iterator operator++(int);
+
+    bool operator==(const iterator& rhs) const noexcept;
+    bool operator!=(const iterator& rhs) const noexcept;
+
+    const Key& key() const;
+    Value& value() const;
+  private:
+    HashTable* table_;
+    size_t index_;
+    void skipEmpty();
+  };
+
+  template <class Key, class Value, class Hash, class Equal>
+  class HashTable<Key, Value, Hash, Equal>::const_iterator
+  {
+    const_iterator();
+    const_iterator(const HashTable* table, size_t index);
+
+    const_iterator& operator++();
+    const_iterator operator++(int);
+
+    bool operator==(const const_iterator& rhs) const noexcept;
+    bool operator!=(const const_iterator& rhs) const noexcept;
+
+    const Key& key() const;
+    const Value& value() const;
+
+  private:
+    const HashTable* table_;
+    size_t index_;
+
+    void skipEmpty();
   };
 }
 template <class Key, class Value, class Hash, class Equal>
@@ -251,6 +303,188 @@ void ulanova::HashTable<Key,Value,Hash,Equal>::rehash(size_t slots)
     }
   }
   swap(tmp);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::begin() noexcept
+{
+  return iterator(this,0);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::end() noexcept
+{
+  return iterator(this,buckets_.getsize());
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::begin() const noexcept
+{
+  return const_iterator(this, 0);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::end() const noexcept
+{
+  return const_iterator(this, buckets_.getsize());
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::cbegin() const noexcept
+{
+  return begin();
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::cend() const noexcept
+{
+  return end();
+}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>::iterator::iterator():
+  table_(nullptr),
+  index_(0)
+{}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>::iterator::iterator(HashTable* table, size_t index):
+  table_(table),
+  index_(index)
+{
+  skipEmpty();
+}
+
+template<class Key, class Value, class Hash, class Equal>
+void ulanova::HashTable<Key,Value,Hash,Equal>::iterator::skipEmpty()
+{
+  if (table_ == nullptr)
+  {
+    return;
+  }
+
+  while (index_ < table_ -> buckets_.getsize() && table__>buckets_[index_].state != BucketState::Occupied)
+  {
+    ++index_;
+  }
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::iterator&
+ulanova::HashTable<Key, Value, Hash, Equal>::iterator::operator++()
+{
+  ++index_;
+  skipEmpty();
+  return *this;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::iterator::operator++(int)
+{
+  iterator old(*this);
+  ++(*this);
+  return old;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+bool ulanova::HashTable<Key, Value, Hash, Equal>::iterator::operator==(const iterator& rhs) const noexcept
+{
+  return table_ == rhs.table_ && index_ == rhs.index_;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+bool ulanova::HashTable<Key, Value, Hash, Equal>::iterator::operator!=(const iterator& rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+const Key& ulanova::HashTable<Key, Value, Hash, Equal>::iterator::key() const
+{
+  return table_->buckets_[index_].key;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+Value& ulanova::HashTable<Key, Value, Hash, Equal>::iterator::value() const
+{
+  return table_->buckets_[index_].value;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::const_iterator():
+  table_(nullptr),
+  index_(0)
+{}
+
+template <class Key, class Value, class Hash, class Equal>
+ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::const_iterator(const HashTable* table, size_t index):
+  table_(table),
+  index_(index)
+{
+  skipEmpty();
+}
+
+template <class Key, class Value, class Hash, class Equal>
+void ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::skipEmpty()
+{
+  if (table_ == nullptr)
+  {
+    return;
+  }
+
+  while (index_ < table_->buckets_.getsize() && table_->buckets_[index_].state != BucketState::Occupied)
+  {
+    ++index_;
+  }
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator&
+ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::operator++()
+{
+  ++index_;
+  skipEmpty();
+  return *this;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+typename ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator
+ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::operator++(int)
+{
+  const_iterator old(*this);
+  ++(*this);
+  return old;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+bool ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::operator==(const const_iterator& rhs) const noexcept
+{
+   return table_ == rhs.table_ && index_ == rhs.index_;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+bool ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::operator!=(const const_iterator& rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template <class Key, class Value, class Hash, class Equal>
+const Key& ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::key() const
+{
+  return table_->buckets_[index_].key;
+}
+
+template <class Key, class Value, class Hash, class Equal>
+const Value& ulanova::HashTable<Key, Value, Hash, Equal>::const_iterator::value() const
+{
+  return table_->buckets_[index_].value;
 }
 
 #endif
