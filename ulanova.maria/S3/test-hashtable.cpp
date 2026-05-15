@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-BOOST_AUTO_TEST_CASE(test_add_has_find)
+BOOST_AUTO_TEST_CASE(test_hash_add_has_find)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(test_add_has_find)
   BOOST_TEST_CHECK(table.find("c") == nullptr);
 }
 
-BOOST_AUTO_TEST_CASE(test_add_updates_existing_key)
+BOOST_AUTO_TEST_CASE(test_hash_add_updates_existing_key)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_add_updates_existing_key)
   BOOST_TEST_CHECK(*table.find("a") == 99);
 }
 
-BOOST_AUTO_TEST_CASE(test_drop)
+BOOST_AUTO_TEST_CASE(test_hash_drop)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
@@ -55,14 +55,14 @@ BOOST_AUTO_TEST_CASE(test_drop)
   BOOST_TEST_CHECK(table.getsize() == 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_drop_missing_key_throws)
+BOOST_AUTO_TEST_CASE(test_hash_drop_missing_key_throws)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
   BOOST_CHECK_THROW(table.drop("missing"), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(test_rehash)
+BOOST_AUTO_TEST_CASE(test_hash_rehash)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_rehash)
   BOOST_TEST_CHECK(*table.find("b") == 20);
 }
 
-BOOST_AUTO_TEST_CASE(test_rehash_too_small_throws_and_keeps_data)
+BOOST_AUTO_TEST_CASE(test_hash_rehash_too_small_throws_and_keeps_data)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(test_rehash_too_small_throws_and_keeps_data)
   BOOST_TEST_CHECK(table.has("b"));
 }
 
-BOOST_AUTO_TEST_CASE(test_iterator_skips_empty_buckets)
+BOOST_AUTO_TEST_CASE(test_hash_iterator_skips_empty_buckets)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(test_iterator_skips_empty_buckets)
   BOOST_TEST_CHECK(count == 3);
 }
 
-BOOST_AUTO_TEST_CASE(test_copy_constructor)
+BOOST_AUTO_TEST_CASE(test_hash_copy_constructor)
 {
   ulanova::HashTable<std::string, int, ulanova::StringHash, ulanova::StringEqual> table(8);
 

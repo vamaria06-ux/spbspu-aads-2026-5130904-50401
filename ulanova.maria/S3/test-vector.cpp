@@ -3,7 +3,7 @@
 
 #include <string>
 
-BOOST_AUTO_TEST_CASE(test_default_constructor)
+BOOST_AUTO_TEST_CASE(test_vector_default_constructor)
 {
   ulanova::Vector<int> v;
 
@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
   BOOST_TEST_CHECK(v.getcapacity() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(test_push_back)
+BOOST_AUTO_TEST_CASE(test_vector_push_back)
 {
   ulanova::Vector<int> v;
 
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   BOOST_TEST_CHECK(v[2] == 30);
 }
 
-BOOST_AUTO_TEST_CASE(test_insert_and_erase)
+BOOST_AUTO_TEST_CASE(test_vector_insert_and_erase)
 {
   ulanova::Vector<int> v;
 
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(test_insert_and_erase)
   BOOST_TEST_CHECK(v[1] == 3);
 }
 
-BOOST_AUTO_TEST_CASE(test_copy_constructor)
+BOOST_AUTO_TEST_CASE(test_vector_copy_constructor)
 {
   ulanova::Vector<std::string> v;
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
   BOOST_TEST_CHECK(copy[0] == "x");
 }
 
-BOOST_AUTO_TEST_CASE(test_push_back_count)
+BOOST_AUTO_TEST_CASE(test_vector_push_back_count)
 {
   ulanova::Vector<int> v;
 
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(test_push_back_count)
   BOOST_TEST_CHECK(v[2] == 7);
 }
 
-BOOST_AUTO_TEST_CASE(test_push_back_range)
+BOOST_AUTO_TEST_CASE(test_vector_push_back_range)
 {
   int values[] = {1, 2, 3};
 
