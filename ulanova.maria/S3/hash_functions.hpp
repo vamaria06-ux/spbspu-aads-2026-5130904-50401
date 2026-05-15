@@ -61,6 +61,41 @@ namespace ulanova
       return 32;
     }
   };
+  struct EdgeKey
+  {
+    std::string from;
+    std::string to;
+    unsigned weight;
+
+    EdgeKey():
+      from(),
+      to(),
+      weight(0)
+    {}
+
+    EdgeKey(const std::string& edgeFrom, const std::string& edgeTo, unsigned edgeWeight):
+      from(edgeFrom),
+      to(edgeTo),
+      weight(edgeWeight)
+    {}
+
+    bool operator==(const EdgeKey& rhs) const
+    {
+      return from == rhs.from && to == rhs.to && weight == rhs.weight;
+    }
+  };
+
+  template <class Hash, class Flavor>
+  void hash_append(Hash& hash, const Flavor& flavor, const EdgeKey& key)
+  {
+    boost::hash2::hash_append(hash, flavor, key.from);
+    boost::hash2::hash_append(hash, flavor, key.to);
+    boost::hash2::hash_append(hash, flavor, key.weight);
+  }
+
+  using EdgeKeyHash = HmacHash<EdgeKey>;
+  using EdgeKeyEqual = EqualTo<EdgeKey>;
+
   using StringHash = HmacHash<std::string>;
   using StringEqual = EqualTo<std::string>;
 }
