@@ -424,7 +424,7 @@ void ulanova::HashTable<Key,Value,Hash,Equal>::iterator::skipEmpty()
     return;
   }
 
-  while (index_ < table_ -> buckets_.getsize() && table_>buckets_[index_].state != BucketState::Occupied)
+  while (index_ < table_-> buckets_.getsize() && table_->buckets_[index_].state != BucketState::Occupied)
   {
     ++index_;
   }
