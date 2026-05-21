@@ -16,10 +16,6 @@ namespace ulanova
   template< class T >
   class LIter
   {
-    friend class List< T >;
-  private:
-    detail::Node< T >* node;
-    detail::Node< T >* head;
   public:
     LIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr) : node(n), head(h) {}
     T& operator*() noexcept
@@ -51,15 +47,16 @@ namespace ulanova
     {
       return &(node->data);
     }
+  private:
+    detail::Node< T >* node;
+    detail::Node< T >* head;
+
+    friend class List< T >;
   };
 
   template< class T >
   class LCIter
   {
-    friend class List< T >;
-  private:
-    detail::Node< T >* node;
-    detail::Node< T >* head;
   public:
     LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr) : node(n), head(h) {}
     const T& operator*() const noexcept
@@ -91,13 +88,16 @@ namespace ulanova
     {
       return &(node->data);
     }
+  private:
+    detail::Node< T >* node;
+    detail::Node< T >* head;
+
+    friend class List< T >;
   };
 
   template < class T >
   class List
   {
-  private:
-    detail::Node< T >* head;
   public:
     List();
     ~List();
@@ -119,6 +119,8 @@ namespace ulanova
     void clear();
 
     T& front();
+  private:
+    detail::Node< T >* head;
   };
 
   template< class T >
