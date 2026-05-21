@@ -268,8 +268,11 @@ BOOST_AUTO_TEST_CASE(erase_after_wraps_to_head_test)
   list.erase_after(it);
 
   BOOST_CHECK(list.front() == 2);
-  ++it;
-  BOOST_CHECK(it == list.end());
+
+  ulanova::LIter< int > check_it = list.begin();
+  BOOST_CHECK(*check_it == 2);
+  ++check_it;
+  BOOST_CHECK(check_it == list.end());
 }
 
 BOOST_AUTO_TEST_CASE(insert_after_end_test)
