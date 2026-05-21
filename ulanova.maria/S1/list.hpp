@@ -82,7 +82,7 @@ namespace ulanova
   template < class T >
   T& LIter< T>::operator*() noexcept
   {
-    return node -> data;
+    return node->data;
   }
 
   template < class T >
@@ -92,7 +92,7 @@ namespace ulanova
     {
       return *this;
     }
-    node = node -> next;
+    node = node->next;
     if (node == head)
     {
       node = nullptr;
@@ -135,7 +135,7 @@ namespace ulanova
   template < class T >
   const T& LCIter< T >::operator*() const noexcept
   {
-    return node -> data;
+    return node->data;
   }
 
   template < class T >
@@ -145,7 +145,7 @@ namespace ulanova
     {
       return *this;
     }
-    node = node -> next;
+    node = node->next;
     if (node == head)
     {
       node = nullptr;
@@ -205,16 +205,16 @@ namespace ulanova
     if (!head)
     {
       head = new_node;
-      head -> next = head;
+      head->next = head;
       return;
     }
     detail::Node< T >* last = head;
-    while (last -> next != head)
+    while (last->next != head)
     {
-      last = last -> next;
+      last = last->next;
     }
-    new_node -> next = head;
-    last -> next = new_node;
+    new_node->next = head;
+    last->next = new_node;
     head = new_node;
   }
   template < class T >
@@ -230,10 +230,10 @@ namespace ulanova
     detail::Node< T >* last = head;
     while (last ->next != head)
     {
-      last = last -> next;
+      last = last->next;
     }
-    last -> next = new_node;
-    new_node -> next = head;
+    last->next = new_node;
+    new_node->next = head;
   }
   template < class T >
   void List< T >::pop_front() noexcept
@@ -242,20 +242,20 @@ namespace ulanova
     {
       return;
     }
-    if (head -> next == head)
+    if (head->next == head)
     {
       delete head;
       head = nullptr;
       return;
     }
     detail::Node< T >* last = head;
-    while (last -> next != head)
+    while (last->next != head)
     {
-      last = last -> next;
+      last = last->next;
     }
     detail::Node< T >* temp = head;
-    head = head -> next;
-    last -> next = head;
+    head = head->next;
+    last->next = head;
     delete temp;
   }
 
@@ -266,7 +266,7 @@ namespace ulanova
     {
       throw std::logic_error("empty list");
     }
-    return head -> data;
+    return head->data;
   }
 
   template < class T >
@@ -312,8 +312,8 @@ namespace ulanova
     {
       return end();
     }
-    detail::Node< T >* new_node = new detail::Node< T >{value, pos.node -> next};
-    pos.node -> next = new_node;
+    detail::Node< T >* new_node = new detail::Node< T >{value, pos.node->next};
+    pos.node->next = new_node;
     return LIter< T >(new_node, head);
   }
   template < class T >
@@ -323,7 +323,7 @@ namespace ulanova
     {
       return;
     }
-    detail::Node< T >* temp = pos.node -> next;
+    detail::Node< T >* temp = pos.node->next;
     if (!temp)
     {
       return;
@@ -336,9 +336,9 @@ namespace ulanova
         head = nullptr;
         return;
       }
-      head = head -> next;
+      head = head->next;
     }
-    pos.node -> next = temp -> next;
+    pos.node->next = temp->next;
     delete temp;
   }
 }
