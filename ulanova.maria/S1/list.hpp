@@ -201,11 +201,20 @@ namespace ulanova
   template< class T >
   List< T >::List() : head(nullptr) {}
   template< class T >
-  List< T >::List(const List& other) : head(nullptr)
+  List< T >::List(const List& other):
+    head(nullptr)
   {
-    for (LCIter< T > it = other.cbegin(); it != other.cend(); ++it)
+    try
     {
-      push_back(*it);
+      for (LCIter< T > it = other.cbegin(); it != other.cend(); ++it)
+      {
+        push_back(*it);
+      }
+    }
+    catch (...)
+    {
+      clear();
+      throw;
     }
   }
 
