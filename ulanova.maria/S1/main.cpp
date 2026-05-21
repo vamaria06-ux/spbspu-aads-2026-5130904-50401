@@ -5,20 +5,17 @@ int main()
 {
   ulanova::List<ulanova::Sequence> seqs = ulanova::read_sequences(std::cin);
 
-  if (seqs.cbegin() == seqs.cend())
+  ulanova::LCIter< ulanova::Sequence > name_it = seqs.cbegin();
+
+  if (name_it != seqs.cend())
   {
-    std::cout << "0\n";
-    return 0;
+    std::cout << name_it->name;
+    ++name_it;
   }
-  bool first = true;
-  for (ulanova::LCIter<ulanova::Sequence> it = seqs.cbegin(); it != seqs.cend(); ++it)
+
+  for (; name_it != seqs.cend(); ++name_it)
   {
-    if (!first)
-    {
-      std:: cout << " " ;
-    }
-    std::cout << it->name;
-    first = false;
+    std::cout << " " << name_it->name;
   }
   std::cout << "\n";
 

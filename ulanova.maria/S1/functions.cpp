@@ -120,17 +120,17 @@ void ulanova::print_sequences(std::ostream& out, const ulanova::List< ulanova::L
 {
   for (ulanova::LCIter< ulanova::List < size_t > > it = seqs.cbegin(); it != seqs.cend(); ++it)
   {
-    bool first = true;
+    ulanova::LCIter< size_t > jt = it->cbegin();
 
-    for (ulanova::LCIter< size_t >  jt = it->cbegin(); jt != it->cend(); ++jt)
+    if (jt != it->cend())
     {
-      if (!first)
-      {
-        out << " ";
-      }
-
       out << *jt;
-      first = false;
+      ++jt;
+    }
+
+    for (; jt != it->cend(); ++jt)
+    {
+      out << " " << *jt;
     }
 
     out << "\n";
@@ -139,17 +139,17 @@ void ulanova::print_sequences(std::ostream& out, const ulanova::List< ulanova::L
 
 void ulanova::print_sums(std::ostream& out, const ulanova::List< size_t > & sums)
 {
-  bool first = true;
+  ulanova::LCIter< size_t > it = sums.cbegin();
 
-  for (ulanova::LCIter< size_t >  it = sums.cbegin(); it != sums.cend(); ++it)
+  if (it != sums.cend())
   {
-    if (!first)
-    {
-      out << " ";
-    }
-
     out << *it;
-    first = false;
+    ++it;
+  }
+
+  for (; it != sums.cend(); ++it)
+  {
+    out << " " << *it;
   }
 
   out << "\n";
