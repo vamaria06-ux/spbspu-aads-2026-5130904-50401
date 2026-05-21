@@ -56,8 +56,8 @@ namespace ulanova
   {
   public:
     List();
-    ~List();
     List(const List& other);
+    ~List();
 
     void push_front(const T& value) noexcept;
     void push_back(const T& value) noexcept;
