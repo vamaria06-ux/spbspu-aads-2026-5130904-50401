@@ -2,6 +2,8 @@
 #include <cstddef>
 #include <cctype>
 #include <limits>
+#include <stdexcept>
+
 
 ulanova::List< ulanova::Sequence > ulanova::read_sequences(std::istream& in)
 {
@@ -13,18 +15,27 @@ ulanova::List< ulanova::Sequence > ulanova::read_sequences(std::istream& in)
     ulanova::Sequence seq;
     seq.name = name;
 
-    while (true)
+    while (in && in.peek() != '\n' && in.peek() != EOF)
     {
-      char symbol = '\0';
       size_t value = 0;
-
-      while (in.get(symbol) && symbol != '\n')
+      if (in >> value)
       {
-        if (in >> value)
-        {
-          seq.values.push_back(value);
-        }
+        seq.values.push_back(value);
       }
+      else
+      {
+        in.clear();
+        in.ignore();
+      }
+    }
+
+    if (in.peek() == '\r')
+    {
+      in.ignore();
+    }
+    if (in.peek() == '\n')
+    {
+      in.ignore();
     }
 
     sequences.push_back(seq);
@@ -94,8 +105,7 @@ ulanova::List< size_t >  ulanova::calculate_sums(const ulanova::List< ulanova::L
       size_t value = *jt;
       if (sum > std::numeric_limits< size_t > ::max() - value)
       {
-        std::cerr << "overflow\n";
-        std::exit(1);
+        throw std::overflow_error("overflow");
       }
       sum += value;
     }
