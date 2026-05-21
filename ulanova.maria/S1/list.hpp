@@ -57,7 +57,11 @@ namespace ulanova
   public:
     List();
     List(const List& other);
+    List(List&& other) noexcept;
     ~List();
+
+    List& operator=(const List& other);
+    List& operator=(List&& other) noexcept;
 
     void push_front(const T& value) noexcept;
     void push_back(const T& value) noexcept;
@@ -197,6 +201,41 @@ namespace ulanova
     }
   }
 
+  template< class T >
+  List< T >::List(List< T >&& other) noexcept:
+    head(other.head)
+  {
+    other.head = nullptr;
+  }
+
+  template< class T >
+  List< T >::~List()
+  {
+    clear();
+  }
+
+  template< class T >
+  List< T >& List< T >::operator=(const List< T >& other)
+  {
+    if (this != &other)
+    {
+      List< T > temp(other);
+      swap(temp);
+    }
+    return *this;
+  }
+
+  template< class T >
+  List< T >& List< T >::operator=(List< T >&& other) noexcept
+  {
+    if (this != &other)
+    {
+      clear();
+      head = other.head;
+      other.head = nullptr;
+    }
+    return *this;
+  }
 
   template < class T >
   void List< T >::push_front(const T& value) noexcept
@@ -298,11 +337,6 @@ namespace ulanova
     {
       pop_front();
     }
-  }
-  template < class T >
-  List< T >::~List()
-  {
-    clear();
   }
 
   template < class T >
