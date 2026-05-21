@@ -1,6 +1,9 @@
 #include <boost/test/unit_test.hpp>
 #include "list.hpp"
 
+#include <utility>
+
+
 BOOST_AUTO_TEST_CASE(push_front_test)
 {
   ulanova::List< int > list;
@@ -114,3 +117,100 @@ BOOST_AUTO_TEST_CASE(const_iterator_test)
   ulanova::LCIter< int > it = clist.cbegin();
   BOOST_CHECK(*it == 2);
 }
+BOOST_AUTO_TEST_CASE(empty_list_iterators_test)
+{
+  ulanova::List< int > list;
+  BOOST_CHECK(list.begin() == list.end());
+  BOOST_CHECK(list.cbegin() == list.cend());
+}
+
+BOOST_AUTO_TEST_CASE(pop_front_empty_test)
+{
+  ulanova::List< int > list;
+  list.pop_front();
+  BOOST_CHECK(list.begin() == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(clear_test)
+{
+  ulanova::List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  list.clear();
+  BOOST_CHECK(list.begin() == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(copy_constructor_test)
+{
+  ulanova::List< int > source;
+  source.push_back(1);
+  source.push_back(2);
+
+  ulanova::List< int > copy(source);
+  source.front() = 10;
+
+  ulanova::LIter< int > it = copy.begin();
+  BOOST_CHECK(*it == 1);
+  ++it;
+  BOOST_CHECK(*it == 2);
+}
+
+BOOST_AUTO_TEST_CASE(copy_assignment_test)
+{
+  ulanova::List< int > source;
+  source.push_back(1);
+  source.push_back(2);
+
+  ulanova::List< int > copy;
+  copy.push_back(9);
+  copy = source;
+
+  ulanova::LIter< int > it = copy.begin();
+  BOOST_CHECK(*it == 1);
+  ++it;
+  BOOST_CHECK(*it == 2);
+}
+
+BOOST_AUTO_TEST_CASE(move_constructor_test)
+{
+  ulanova::List< int > source;
+  source.push_back(1);
+  source.push_back(2);
+
+  ulanova::List< int > moved(std::move(source));
+
+  ulanova::LIter< int > it = moved.begin();
+  BOOST_CHECK(*it == 1);
+  ++it;
+  BOOST_CHECK(*it == 2);
+  BOOST_CHECK(source.begin() == source.end());
+}
+
+BOOST_AUTO_TEST_CASE(move_assignment_test)
+{
+  ulanova::List< int > source;
+  source.push_back(1);
+  source.push_back(2);
+
+  ulanova::List< int > moved;
+  moved.push_back(9);
+  moved = std::move(source);
+
+  ulanova::LIter< int > it = moved.begin();
+  BOOST_CHECK(*it == 1);
+  ++it;
+  BOOST_CHECK(*it == 2);
+  BOOST_CHECK(source.begin() == source.end());
+}
+
+BOOST_AUTO_TEST_CASE(postfix_increment_test)
+{
+  ulanova::List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+
+  ulanova::LIter< int > it = list.begin();
+  BOOST_CHECK(*(it++) == 1);
+  BOOST_CHECK(*it == 2);
+}
+
