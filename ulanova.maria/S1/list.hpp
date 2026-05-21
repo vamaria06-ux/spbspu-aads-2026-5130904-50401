@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include <utility>
+
 namespace ulanova
 {
   namespace detail
@@ -64,10 +66,16 @@ namespace ulanova
     List& operator=(List&& other) noexcept;
 
     void push_front(const T& value) noexcept;
+    void push_front(T&& value);
+
     void push_back(const T& value) noexcept;
+    void push_back(T&& value);
+
     void pop_front() noexcept;
 
     LIter< T > insert_after(LIter< T > pos, const T& value) noexcept;
+    LIter< T > insert_after(LIter< T > pos, T&& value);
+
     void erase_after(LIter< T > pos) noexcept;
 
     LIter< T > begin() noexcept;
@@ -256,6 +264,27 @@ namespace ulanova
     last->next = new_node;
     head = new_node;
   }
+
+  template< class T >
+  void List< T >::push_front(T&& value)
+  {
+    detail::Node< T >* new_node = new detail::Node< T >{std::move(value), nullptr};
+    if (!head)
+    {
+      head = new_node;
+      head->next = head;
+      return;
+    }
+    detail::Node< T >* last = head;
+    while (last->next != head)
+    {
+      last = last->next;
+    }
+    new_node->next = head;
+    last->next = new_node;
+    head = new_node;
+  }
+
   template < class T >
   void List< T >::push_back(const T& value) noexcept
   {
@@ -274,6 +303,26 @@ namespace ulanova
     last->next = new_node;
     new_node->next = head;
   }
+
+  template< class T >
+  void List< T >::push_back(T&& value)
+  {
+    detail::Node< T >* new_node = new detail::Node< T >{std::move(value), nullptr};
+    if (!head)
+    {
+      head = new_node;
+      head->next = head;
+      return;
+    }
+    detail::Node< T >* last = head;
+    while (last->next != head)
+    {
+      last = last->next;
+    }
+    last->next = new_node;
+    new_node->next = head;
+  }
+
   template < class T >
   void List< T >::pop_front() noexcept
   {
@@ -350,6 +399,19 @@ namespace ulanova
     pos.node->next = new_node;
     return LIter< T >(new_node, head);
   }
+
+  template< class T >
+  LIter< T > List< T >::insert_after(LIter< T > pos, T&& value)
+  {
+    if (!pos.node)
+    {
+      return end();
+    }
+    detail::Node< T >* new_node = new detail::Node< T >{std::move(value), pos.node->next};
+    pos.node->next = new_node;
+    return LIter< T >(new_node, head);
+  }
+
   template < class T >
   void List< T >::erase_after(LIter< T > pos) noexcept
   {
