@@ -162,7 +162,7 @@ namespace ulanova
   }
 
   template < class T >
-  LCIter< T >::LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr):
+  LCIter< T >::LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h):
     node(n),
     head(h)
   {}
