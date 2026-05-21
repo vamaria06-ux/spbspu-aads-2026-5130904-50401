@@ -161,11 +161,12 @@ namespace ulanova
     return &(node->data);
   }
 
-  template < class T >
-  LCIter< T >::LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h):
+  template< class T >
+  LCIter< T >::LCIter(detail::Node< T >* n, detail::Node< T >* h):
     node(n),
     head(h)
   {}
+
 
   template< class T >
   List< T >::List() : head(nullptr) {}
