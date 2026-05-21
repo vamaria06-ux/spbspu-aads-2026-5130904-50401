@@ -51,7 +51,7 @@ namespace ulanova
       node(n),
       head(h)
     {}
-    
+
     detail::Node< T >* node;
     detail::Node< T >* head;
 
