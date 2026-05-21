@@ -1,5 +1,5 @@
-#include "list.hpp"
 #include <boost/test/unit_test.hpp>
+#include "list.hpp"
 
 BOOST_AUTO_TEST_CASE(push_front_test)
 {
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(iterator_traverse_test)
   list.push_front(2);
   list.push_front(3);
   int sum = 0;
-  for(ulanova::LIter< int > it = list.begin(); it != list.end(); ++it)
+  for (ulanova::LIter< int > it = list.begin(); it != list.end(); ++it)
   {
     sum += *it;
   }
