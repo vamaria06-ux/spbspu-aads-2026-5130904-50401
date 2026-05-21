@@ -29,11 +29,11 @@ int main()
     return 0;
   }
 
-  print_sequences(transposed);
+  print_sequences(std::cout, transposed);
 
   ulanova::List<size_t> sums = calculate_sums(transposed);
 
-  print_sums(sums);
+  print_sums(std::cout, sums);
 
   return 0;
 }

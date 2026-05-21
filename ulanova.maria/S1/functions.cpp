@@ -115,7 +115,7 @@ namespace ulanova
     return sums;
   }
 
-  void print_sequences(const List< List < size_t > >& seqs)
+  void print_sequences(std::ostream& out, const List< List < size_t > >& seqs)
   {
     for (LCIter< List < size_t > > it = seqs.cbegin(); it != seqs.cend(); ++it)
     {
@@ -125,17 +125,17 @@ namespace ulanova
       {
         if (!first)
         {
-          std::cout << " ";
+          out << " ";
         }
 
-        std::cout << *jt;
+        out << *jt;
         first = false;
       }
 
-      std::cout << "\n";
+      out << "\n";
     }
   }
-  void print_sums(const List< size_t > & sums)
+  void print_sums(std::ostream& out, const List< size_t > & sums)
   {
     bool first = true;
 
@@ -143,13 +143,13 @@ namespace ulanova
     {
       if (!first)
       {
-        std::cout << " ";
+        out << " ";
       }
 
-      std::cout << *it;
+      out << *it;
       first = false;
     }
 
-    std::cout << "\n";
+    out << "\n";
   }
 }
