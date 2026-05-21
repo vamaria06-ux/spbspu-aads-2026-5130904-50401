@@ -17,7 +17,6 @@ namespace ulanova
   class LIter
   {
   public:
-    LIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr) : node(n), head(h) {}
     T& operator*() noexcept
     {
       return node -> data;
@@ -48,6 +47,11 @@ namespace ulanova
       return &(node->data);
     }
   private:
+    LIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr):
+      node(n),
+      head(h)
+    {}
+    
     detail::Node< T >* node;
     detail::Node< T >* head;
 
@@ -58,7 +62,6 @@ namespace ulanova
   class LCIter
   {
   public:
-    LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr) : node(n), head(h) {}
     const T& operator*() const noexcept
     {
       return node -> data;
@@ -89,6 +92,11 @@ namespace ulanova
       return &(node->data);
     }
   private:
+    LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr):
+      node(n),
+      head(h)
+    {}
+
     detail::Node< T >* node;
     detail::Node< T >* head;
 
