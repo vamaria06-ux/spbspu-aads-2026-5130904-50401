@@ -118,8 +118,30 @@ ulanova::List< size_t >  ulanova::calculate_sums(const ulanova::List< ulanova::L
 
 void ulanova::print_sequences(std::ostream& out, const ulanova::List< ulanova::List < size_t > >& seqs)
 {
-  for (ulanova::LCIter< ulanova::List < size_t > > it = seqs.cbegin(); it != seqs.cend(); ++it)
+  ulanova::LCIter< ulanova::List< size_t > > it = seqs.cbegin();
+
+  if (it != seqs.cend())
   {
+    ulanova::LCIter< size_t > jt = it->cbegin();
+
+    if (jt != it->cend())
+    {
+      out << *jt;
+      ++jt;
+    }
+
+    for (; jt != it->cend(); ++jt)
+    {
+      out << " " << *jt;
+    }
+
+    ++it;
+  }
+
+  for (; it != seqs.cend(); ++it)
+  {
+    out << "\n";
+
     ulanova::LCIter< size_t > jt = it->cbegin();
 
     if (jt != it->cend())
