@@ -85,6 +85,7 @@ namespace ulanova
     LCIter< T > cend() const noexcept;
 
     void clear();
+    void swap(List< T >& other) noexcept;
 
     T& front();
   private:
@@ -395,6 +396,14 @@ namespace ulanova
     {
       pop_front();
     }
+  }
+
+  template< class T >
+  void ulanova::List< T >::swap(List< T >& other) noexcept
+  {
+    detail::Node< T >* temp = head;
+    head = other.head;
+    other.head = temp;
   }
 
   template < class T >
