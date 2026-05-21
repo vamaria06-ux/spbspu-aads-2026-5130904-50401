@@ -27,11 +27,13 @@ int main()
   }
 
   print_sequences(std::cout, transposed);
+  std::cout << "\n";
 
   try
   {
     ulanova::List< size_t > sums = ulanova::calculate_sums(transposed);
     ulanova::print_sums(std::cout, sums);
+    std::cout << "\n";
   }
   catch (const std::overflow_error& e)
   {

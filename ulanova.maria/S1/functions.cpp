@@ -132,8 +132,6 @@ void ulanova::print_sequences(std::ostream& out, const ulanova::List< ulanova::L
     {
       out << " " << *jt;
     }
-
-    out << "\n";
   }
 }
 
@@ -151,6 +149,4 @@ void ulanova::print_sums(std::ostream& out, const ulanova::List< size_t > & sums
   {
     out << " " << *it;
   }
-
-  out << "\n";
 }
