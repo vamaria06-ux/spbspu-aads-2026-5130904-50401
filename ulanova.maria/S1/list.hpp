@@ -19,6 +19,7 @@ namespace ulanova
   public:
     T& operator*() noexcept;
     LIter& operator++() noexcept;
+    LIter operator++(int) noexcept;
     bool operator!=(const LIter& other) const noexcept;
     bool operator==(const LIter& other) const noexcept;
     T* operator->() noexcept;
@@ -37,6 +38,7 @@ namespace ulanova
   public:
     const T& operator*() const noexcept;
     LCIter& operator++() noexcept;
+    LCIter operator++(int) noexcept;
     bool operator!=(const LCIter& other) const noexcept;
     bool operator==(const LCIter& other) const noexcept;
     const T* operator->() const noexcept;
@@ -98,6 +100,14 @@ namespace ulanova
     return *this;
   }
 
+  template< class T >
+  LIter< T > LIter< T >::operator++(int) noexcept
+  {
+    LIter< T > result(*this);
+    ++(*this);
+    return result;
+  }
+
   template < class T >
   bool LIter< T >::operator!=(const LIter& other) const noexcept
   {
@@ -141,6 +151,14 @@ namespace ulanova
       node = nullptr;
     }
     return *this;
+  }
+
+  template< class T >
+  LCIter< T > LCIter< T >::operator++(int) noexcept
+  {
+    LCIter< T > result(*this);
+    ++(*this);
+    return result;
   }
 
   template < class T >
