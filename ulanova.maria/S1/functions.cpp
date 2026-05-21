@@ -15,22 +15,15 @@ ulanova::List< ulanova::Sequence > ulanova::read_sequences(std::istream& in)
 
     while (true)
     {
-      int c = in.peek();
+      char symbol = '\0';
+      size_t value = 0;
 
-      if (c == EOF || c == '\n')
+      while (in.get(symbol) && symbol != '\n')
       {
-        break;
-      }
-
-      if (std::isdigit(c))
-      {
-        size_t value;
-        in >> value;
-        seq.values.push_back(value);
-      }
-      else
-      {
-        in.get();
+        if (in >> value)
+        {
+          seq.values.push_back(value);
+        }
       }
     }
 
