@@ -65,15 +65,15 @@ namespace ulanova
     List& operator=(const List& other);
     List& operator=(List&& other) noexcept;
 
-    void push_front(const T& value) noexcept;
+    void push_front(const T& value);
     void push_front(T&& value);
 
-    void push_back(const T& value) noexcept;
+    void push_back(const T& value);
     void push_back(T&& value);
 
     void pop_front() noexcept;
 
-    LIter< T > insert_after(LIter< T > pos, const T& value) noexcept;
+    LIter< T > insert_after(LIter< T > pos, const T& value);
     LIter< T > insert_after(LIter< T > pos, T&& value);
 
     void erase_after(LIter< T > pos) noexcept;
@@ -255,7 +255,7 @@ namespace ulanova
   }
 
   template < class T >
-  void List< T >::push_front(const T& value) noexcept
+  void List< T >::push_front(const T& value)
   {
     detail::Node< T >* new_node = new detail::Node< T >{value,nullptr};
     if (!head)
@@ -295,7 +295,7 @@ namespace ulanova
   }
 
   template < class T >
-  void List< T >::push_back(const T& value) noexcept
+  void List< T >::push_back(const T& value)
   {
     detail::Node< T >* new_node = new detail::Node< T >{value,nullptr};
     if(!head)
@@ -398,7 +398,7 @@ namespace ulanova
   }
 
   template < class T >
-  LIter< T > List< T >::insert_after(LIter< T > pos, const T& value) noexcept
+  LIter< T > List< T >::insert_after(LIter< T > pos, const T& value)
   {
     if (!pos.node)
     {
