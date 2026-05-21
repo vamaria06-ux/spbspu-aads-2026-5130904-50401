@@ -214,3 +214,90 @@ BOOST_AUTO_TEST_CASE(postfix_increment_test)
   BOOST_CHECK(*it == 2);
 }
 
+BOOST_AUTO_TEST_CASE(swap_test)
+{
+  ulanova::List< int > first;
+  first.push_back(1);
+  first.push_back(2);
+
+  ulanova::List< int > second;
+  second.push_back(3);
+
+  first.swap(second);
+
+  ulanova::LIter< int > first_it = first.begin();
+  BOOST_CHECK(*first_it == 3);
+  ++first_it;
+  BOOST_CHECK(first_it == first.end());
+
+  ulanova::LIter< int > second_it = second.begin();
+  BOOST_CHECK(*second_it == 1);
+  ++second_it;
+  BOOST_CHECK(*second_it == 2);
+}
+
+BOOST_AUTO_TEST_CASE(pop_front_single_element_test)
+{
+  ulanova::List< int > list;
+  list.push_back(1);
+  list.pop_front();
+
+  BOOST_CHECK(list.begin() == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(erase_after_end_test)
+{
+  ulanova::List< int > list;
+  list.push_back(1);
+
+  list.erase_after(list.end());
+
+  ulanova::LIter< int > it = list.begin();
+  BOOST_CHECK(*it == 1);
+}
+
+BOOST_AUTO_TEST_CASE(erase_after_wraps_to_head_test)
+{
+  ulanova::List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+
+  ulanova::LIter< int > it = list.begin();
+  ++it;
+
+  list.erase_after(it);
+
+  BOOST_CHECK(list.front() == 2);
+  ++it;
+  BOOST_CHECK(it == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(insert_after_end_test)
+{
+  ulanova::List< int > list;
+  list.push_back(1);
+
+  ulanova::LIter< int > result = list.insert_after(list.end(), 2);
+
+  BOOST_CHECK(result == list.end());
+  BOOST_CHECK(list.front() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(increment_end_iterator_test)
+{
+  ulanova::List< int > list;
+  ulanova::LIter< int > it = list.end();
+
+  ++it;
+
+  BOOST_CHECK(it == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(front_empty_throws_test)
+{
+  ulanova::List< int > list;
+
+  BOOST_CHECK_THROW(list.front(), std::logic_error);
+}
+
+
