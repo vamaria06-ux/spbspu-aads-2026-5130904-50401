@@ -17,40 +17,13 @@ namespace ulanova
   class LIter
   {
   public:
-    T& operator*() noexcept
-    {
-      return node -> data;
-    }
-    LIter& operator++() noexcept
-    {
-      if (!node)
-      {
-        return *this;
-      }
-      node = node -> next;
-      if (node == head)
-      {
-        node = nullptr;
-      }
-      return *this;
-    }
-    bool operator!=(const LIter& other) const noexcept
-    {
-      return node != other.node;
-    }
-    bool operator==(const LIter& other) const noexcept
-    {
-      return node == other.node;
-    }
-    T* operator->() noexcept
-    {
-      return &(node->data);
-    }
+    T& operator*() noexcept;
+    LIter& operator++() noexcept;
+    bool operator!=(const LIter& other) const noexcept;
+    bool operator==(const LIter& other) const noexcept;
+    T* operator->() noexcept;
   private:
-    LIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr):
-      node(n),
-      head(h)
-    {}
+    LIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr);
 
     detail::Node< T >* node;
     detail::Node< T >* head;
@@ -62,40 +35,13 @@ namespace ulanova
   class LCIter
   {
   public:
-    const T& operator*() const noexcept
-    {
-      return node -> data;
-    }
-    LCIter& operator++() noexcept
-    {
-      if (!node)
-      {
-        return *this;
-      }
-      node = node -> next;
-      if (node == head)
-      {
-        node = nullptr;
-      }
-      return *this;
-    }
-    bool operator!=(const LCIter& other) const noexcept
-    {
-      return node != other.node;
-    }
-    bool operator==(const LCIter& other) const noexcept
-    {
-      return node == other.node;
-    }
-    const T* operator->() const noexcept
-    {
-      return &(node->data);
-    }
+    const T& operator*() const noexcept;
+    LCIter& operator++() noexcept;
+    bool operator!=(const LCIter& other) const noexcept;
+    bool operator==(const LCIter& other) const noexcept;
+    const T* operator->() const noexcept;
   private:
-    LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr):
-      node(n),
-      head(h)
-    {}
+    LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr);
 
     detail::Node< T >* node;
     detail::Node< T >* head;
@@ -130,6 +76,96 @@ namespace ulanova
   private:
     detail::Node< T >* head;
   };
+
+  template < class T >
+  T& LIter< T>::operator*() noexcept
+  {
+    return node -> data;
+  }
+
+  template < class T >
+  LIter< T >& LIter< T >::operator++() noexcept
+  {
+    if (!node)
+    {
+      return *this;
+    }
+    node = node -> next;
+    if (node == head)
+    {
+      node = nullptr;
+    }
+    return *this;
+  }
+
+  template < class T >
+  bool LIter< T >::operator!=(const LIter& other) const noexcept
+  {
+    return node != other.node;
+  }
+
+  template < class T >
+  bool LIter< T >::operator==(const LIter& other) const noexcept
+  {
+    return node == other.node;
+  }
+
+  template < class T >
+  T* LIter< T >::operator->() noexcept
+  {
+    return &(node->data);
+  }
+
+  template< class T >
+  LIter< T >::LIter(detail::Node< T >* n, detail::Node< T >* h):
+    node(n),
+    head(h)
+  {}
+
+  template < class T >
+  const T& LCIter< T >::operator*() const noexcept
+  {
+    return node -> data;
+  }
+
+  template < class T >
+  LCIter< T> & LCIter< T >::operator++() noexcept
+  {
+    if (!node)
+    {
+      return *this;
+    }
+    node = node -> next;
+    if (node == head)
+    {
+      node = nullptr;
+    }
+    return *this;
+  }
+
+  template < class T >
+  bool LCIter< T >::operator!=(const LCIter& other) const noexcept
+  {
+    return node != other.node;
+  }
+
+  template < class T >
+  bool LCIter< T >::operator==(const LCIter& other) const noexcept
+  {
+    return node == other.node;
+  }
+
+  template < class T >
+  const T* LCIter< T >::operator->() const noexcept
+  {
+    return &(node->data);
+  }
+
+  template < class T >
+  LCIter< T >::LCIter(detail::Node< T >* n = nullptr, detail::Node< T >* h = nullptr):
+    node(n),
+    head(h)
+  {}
 
   template< class T >
   List< T >::List() : head(nullptr) {}
