@@ -5,6 +5,12 @@ int main()
 {
   ulanova::List<ulanova::Sequence> seqs = ulanova::read_sequences(std::cin);
 
+  if (seqs.cbegin() == seqs.cend())
+  {
+    std::cout << "0\n";
+    return 0;
+  }
+
   ulanova::LCIter< ulanova::Sequence > name_it = seqs.cbegin();
 
   if (name_it != seqs.cend())
