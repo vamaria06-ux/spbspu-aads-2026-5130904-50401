@@ -64,6 +64,9 @@ namespace ulanova
     iterator begin() noexcept;
     iterator end() noexcept;
 
+    size_t height() const noexcept;
+    size_t height(const_iterator it) const noexcept;
+
   private:
     detail::NodeBase* fake_root_;
     detail::NodeBase* fake_leaf_;
@@ -697,6 +700,18 @@ Value ulanova::BSTree< Key, Value, Compare >::get(Key key) const
   }
 
   return as_node(node)->data.second;
+}
+
+template< class Key, class Value, class Compare >
+size_t ulanova::BSTree< Key, Value, Compare >::height() const noexcept
+{
+  return get_height(fake_root_->left);
+}
+
+template< class Key, class Value, class Compare >
+size_t ulanova::BSTree< Key, Value, Compare >::height(const_iterator it) const noexcept
+{
+  return get_height(it.node_);
 }
 
 #endif
