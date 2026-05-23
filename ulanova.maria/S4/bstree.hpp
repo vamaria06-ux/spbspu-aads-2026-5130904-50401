@@ -34,6 +34,9 @@ namespace ulanova
   template< class Key, class Value >
   class BSTreeConstIterator;
 
+  template< class Key, class Value >
+  class BSTreeIterator;
+
   template< class Key, class Value, class Compare >
   class BSTree
   {
@@ -58,6 +61,11 @@ namespace ulanova
     const_iterator begin() const noexcept;
     const_iterator end() const noexcept;
 
+    using iterator = BSTreeIterator< Key, Value >;
+
+    iterator begin() noexcept;
+    iterator end() noexcept;
+
   private:
     detail::NodeBase* fake_root_;
     detail::NodeBase* fake_leaf_;
@@ -79,6 +87,7 @@ namespace ulanova
     detail::NodeBase * next_node(detail::NodeBase * node) const noexcept;
 
     friend class BSTreeConstIterator< Key, Value >;
+    friend class BSTreeIterator< Key, Value >;
   };
 
   template< class Key, class Value >
@@ -105,6 +114,35 @@ namespace ulanova
     detail::NodeBase * fake_leaf_;
 
     BSTreeConstIterator(detail::NodeBase * node, detail::NodeBase * fake_leaf);
+
+    template< class K, class V, class C >
+    friend class BSTree;
+  };
+
+  template< class Key, class Value >
+  class BSTreeIterator
+  {
+  public:
+    using value_type = std::pair< const Key, Value >;
+    using reference = value_type &;
+    using pointer = value_type *;
+
+    BSTreeIterator();
+
+    reference operator*() const;
+    pointer operator->() const;
+
+    BSTreeIterator & operator++();
+    BSTreeIterator operator++(int);
+
+    bool operator==(const BSTreeIterator & rhs) const noexcept;
+    bool operator!=(const BSTreeIterator & rhs) const noexcept;
+
+  private:
+    detail::NodeBase * node_;
+    detail::NodeBase * fake_leaf_;
+
+    BSTreeIterator(detail::NodeBase * node, detail::NodeBase * fake_leaf);
 
     template< class K, class V, class C >
     friend class BSTree;
@@ -494,6 +532,108 @@ ulanova::BSTree< Key, Value, Compare >::next_node(detail::NodeBase * node) const
   }
 
   return parent;
+}
+
+template< class Key, class Value >
+ulanova::BSTreeIterator< Key, Value >::BSTreeIterator():
+  node_(nullptr),
+  fake_leaf_(nullptr)
+{}
+
+template< class Key, class Value >
+typename ulanova::BSTreeIterator< Key, Value >::reference
+ulanova::BSTreeIterator< Key, Value >::operator*() const
+{
+  return static_cast< detail::Node< Key, Value > * >(node_)->data;
+}
+
+template< class Key, class Value >
+typename ulanova::BSTreeIterator< Key, Value >::pointer
+ulanova::BSTreeIterator< Key, Value >::operator->() const
+{
+  return &(static_cast< detail::Node< Key, Value > * >(node_)->data);
+}
+
+template< class Key, class Value >
+ulanova::BSTreeIterator< Key, Value > &
+ulanova::BSTreeIterator< Key, Value >::operator++()
+{
+  if (node_->right != fake_leaf_)
+  {
+    node_ = node_->right;
+    while (node_->left != fake_leaf_)
+    {
+      node_ = node_->left;
+    }
+  }
+  else
+  {
+    detail::NodeBase * parent = node_->parent;
+    while ((parent != nullptr) && (node_ == parent->right))
+    {
+      node_ = parent;
+      parent = parent->parent;
+    }
+
+    if (parent == nullptr)
+    {
+      node_ = fake_leaf_;
+    }
+    else
+    {
+      node_ = parent;
+    }
+  }
+
+  return *this;
+}
+
+template< class Key, class Value >
+ulanova::BSTreeIterator< Key, Value >
+ulanova::BSTreeIterator< Key, Value >::operator++(int)
+{
+  BSTreeIterator temp(*this);
+  ++(*this);
+  return temp;
+}
+
+template< class Key, class Value >
+bool ulanova::BSTreeIterator< Key, Value >::operator==(
+  const BSTreeIterator & rhs
+) const noexcept
+{
+  return node_ == rhs.node_;
+}
+
+template< class Key, class Value >
+bool ulanova::BSTreeIterator< Key, Value >::operator!=(
+  const BSTreeIterator & rhs
+) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template< class Key, class Value >
+ulanova::BSTreeIterator< Key, Value >::BSTreeIterator(
+  detail::NodeBase * node,
+  detail::NodeBase * fake_leaf
+):
+  node_(node),
+  fake_leaf_(fake_leaf)
+{}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::iterator
+ulanova::BSTree< Key, Value, Compare >::begin() noexcept
+{
+  return iterator(min_node(fake_root_->left), fake_leaf_);
+}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::iterator
+ulanova::BSTree< Key, Value, Compare >::end() noexcept
+{
+  return iterator(fake_leaf_, fake_leaf_);
 }
 
 #endif
