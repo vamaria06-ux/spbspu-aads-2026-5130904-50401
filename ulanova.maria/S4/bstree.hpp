@@ -49,10 +49,8 @@ namespace ulanova
     void clear() noexcept;
 
     void push(const Key& key, const Value& value);
-
-    bool contains(const Key & key) const noexcept;
-    Value & at(const Key & key);
-    const Value & at(const Key & key) const;
+    Value drop(Key key);
+    Value get(Key key) const;
 
     using const_iterator = BSTreeConstIterator< Key, Value >;
 
@@ -88,6 +86,7 @@ namespace ulanova
 
     friend class BSTreeConstIterator< Key, Value >;
     friend class BSTreeIterator< Key, Value >;
+    void replace_node(detail::NodeBase * old_node, detail::NodeBase * new_node) noexcept;
   };
 
   template< class Key, class Value >
@@ -318,36 +317,6 @@ void ulanova::BSTree< Key, Value, Compare >::update_height(detail::NodeBase * no
   {
     node->height = right_height + 1;
   }
-}
-
-template< class Key, class Value, class Compare >
-bool ulanova::BSTree< Key, Value, Compare >::contains(const Key & key) const noexcept
-{
-  return find_node(key) != fake_leaf_;
-}
-
-template< class Key, class Value, class Compare >
-Value & ulanova::BSTree< Key, Value, Compare >::at(const Key & key)
-{
-  detail::NodeBase * node = find_node(key);
-  if (node == fake_leaf_)
-  {
-    throw std::out_of_range("key not found");
-  }
-
-  return as_node(node)->data.second;
-}
-
-template< class Key, class Value, class Compare >
-const Value & ulanova::BSTree< Key, Value, Compare >::at(const Key & key) const
-{
-  detail::NodeBase * node = find_node(key);
-  if (node == fake_leaf_)
-  {
-    throw std::out_of_range("key not found");
-  }
-
-  return as_node(node)->data.second;
 }
 
 template< class Key, class Value, class Compare >
@@ -634,6 +603,100 @@ typename ulanova::BSTree< Key, Value, Compare >::iterator
 ulanova::BSTree< Key, Value, Compare >::end() noexcept
 {
   return iterator(fake_leaf_, fake_leaf_);
+}
+
+template< class Key, class Value, class Compare >
+Value ulanova::BSTree< Key, Value, Compare >::drop(Key key)
+{
+  detail::NodeBase * node = find_node(key);
+  if (node == fake_leaf_)
+  {
+    throw std::out_of_range("key not found");
+  }
+
+  Value result = as_node(node)->data.second;
+  detail::NodeBase * height_start = node->parent;
+
+  if (node->left == fake_leaf_)
+  {
+    replace_node(node, node->right);
+    delete node;
+  }
+  else if (node->right == fake_leaf_)
+  {
+    replace_node(node, node->left);
+    delete node;
+  }
+  else
+  {
+    detail::NodeBase * next = min_node(node->right);
+    height_start = next->parent;
+
+    if (next->parent != node)
+    {
+      replace_node(next, next->right);
+      next->right = node->right;
+      next->right->parent = next;
+    }
+    else
+    {
+      height_start = next;
+    }
+
+    replace_node(node, next);
+    next->left = node->left;
+    next->left->parent = next;
+    next->height = node->height;
+
+    delete node;
+  }
+
+  --size_;
+
+  while (height_start != nullptr)
+  {
+    update_height(height_start);
+    height_start = height_start->parent;
+  }
+
+  return result;
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::replace_node(
+  detail::NodeBase * old_node,
+  detail::NodeBase * new_node
+) noexcept
+{
+  if (old_node->parent == fake_root_)
+  {
+    fake_root_->left = new_node;
+  }
+  else if (old_node->parent->left == old_node)
+  {
+    old_node->parent->left = new_node;
+  }
+  else
+  {
+    old_node->parent->right = new_node;
+  }
+
+  if (new_node != fake_leaf_)
+  {
+    new_node->parent = old_node->parent;
+  }
+}
+
+template< class Key, class Value, class Compare >
+Value ulanova::BSTree< Key, Value, Compare >::get(Key key) const
+{
+  detail::NodeBase * node = find_node(key);
+  if (node == fake_leaf_)
+  {
+    throw std::out_of_range("key not found");
+  }
+
+  return as_node(node)->data.second;
 }
 
 #endif
