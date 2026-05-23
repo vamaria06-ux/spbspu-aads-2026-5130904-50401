@@ -67,6 +67,11 @@ namespace ulanova
     size_t height() const noexcept;
     size_t height(const_iterator it) const noexcept;
 
+    const_iterator rotateLeft(const_iterator it);
+    const_iterator rotateRight(const_iterator it);
+    const_iterator rotateLargeLeft(const_iterator it);
+    const_iterator rotateLargeRight(const_iterator it);
+
   private:
     detail::NodeBase* fake_root_;
     detail::NodeBase* fake_leaf_;
@@ -90,6 +95,9 @@ namespace ulanova
     friend class BSTreeConstIterator< Key, Value >;
     friend class BSTreeIterator< Key, Value >;
     void replace_node(detail::NodeBase * old_node, detail::NodeBase * new_node) noexcept;
+
+    void rotate_left_node(detail::NodeBase * node);
+    void rotate_right_node(detail::NodeBase * node);
   };
 
   template< class Key, class Value >
@@ -712,6 +720,142 @@ template< class Key, class Value, class Compare >
 size_t ulanova::BSTree< Key, Value, Compare >::height(const_iterator it) const noexcept
 {
   return get_height(it.node_);
+}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::const_iterator
+ulanova::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
+{
+  detail::NodeBase * node = it.node_;
+
+  if ((node == fake_leaf_) || (node->right == fake_leaf_))
+  {
+    throw std::logic_error("left rotation is impossible");
+  }
+
+  detail::NodeBase * new_root = node->right;
+  rotate_left_node(node);
+
+  return const_iterator(new_root, fake_leaf_);
+}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::const_iterator
+ulanova::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
+{
+  detail::NodeBase * node = it.node_;
+
+  if ((node == fake_leaf_) || (node->left == fake_leaf_))
+  {
+    throw std::logic_error("right rotation is impossible");
+  }
+
+  detail::NodeBase * new_root = node->left;
+  rotate_right_node(node);
+
+  return const_iterator(new_root, fake_leaf_);
+}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::const_iterator
+ulanova::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
+{
+  detail::NodeBase * node = it.node_;
+
+  if ((node == fake_leaf_) || (node->right == fake_leaf_) || (node->right->left == fake_leaf_))
+  {
+    throw std::logic_error("large left rotation is impossible");
+  }
+
+  rotate_right_node(node->right);
+  detail::NodeBase * new_root = node->right;
+  rotate_left_node(node);
+
+  return const_iterator(new_root, fake_leaf_);
+}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::const_iterator
+ulanova::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
+{
+  detail::NodeBase * node = it.node_;
+
+  if ((node == fake_leaf_) || (node->left == fake_leaf_) || (node->left->right == fake_leaf_))
+  {
+    throw std::logic_error("large right rotation is impossible");
+  }
+
+  rotate_left_node(node->left);
+  detail::NodeBase * new_root = node->left;
+  rotate_right_node(node);
+
+  return const_iterator(new_root, fake_leaf_);
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::rotate_left_node(detail::NodeBase * node)
+{
+  detail::NodeBase * new_root = node->right;
+
+  node->right = new_root->left;
+  if (new_root->left != fake_leaf_)
+  {
+    new_root->left->parent = node;
+  }
+
+  new_root->parent = node->parent;
+
+  if (node->parent == fake_root_)
+  {
+    fake_root_->left = new_root;
+  }
+  else if (node->parent->left == node)
+  {
+    node->parent->left = new_root;
+  }
+  else
+  {
+    node->parent->right = new_root;
+  }
+
+  new_root->left = node;
+  node->parent = new_root;
+
+  update_height(node);
+  update_height(new_root);
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::rotate_right_node(detail::NodeBase * node)
+{
+  detail::NodeBase * new_root = node->left;
+
+  node->left = new_root->right;
+  if (new_root->right != fake_leaf_)
+  {
+    new_root->right->parent = node;
+  }
+
+  new_root->parent = node->parent;
+
+  if (node->parent == fake_root_)
+  {
+    fake_root_->left = new_root;
+  }
+  else if (node->parent->left == node)
+  {
+    node->parent->left = new_root;
+  }
+  else
+  {
+    node->parent->right = new_root;
+  }
+
+  new_root->right = node;
+  node->parent = new_root;
+
+  update_height(node);
+  update_height(new_root);
 }
 
 #endif
