@@ -37,9 +37,9 @@ void ulanova::print(std::ostream & out, std::istream & in, Storage & storage)
   out << '\n';
 }
 
-namespace
+namespace ulanova
 {
-  ulanova::Dictionary complement(
+  ulanova::Dictionary makeComplement(
     const ulanova::Dictionary & lhs,
     const ulanova::Dictionary & rhs
   )
@@ -61,7 +61,7 @@ namespace
     return result;
   }
 
-  ulanova::Dictionary intersect(
+  ulanova::Dictionary makeIntersect(
     const ulanova::Dictionary & lhs,
     const ulanova::Dictionary & rhs
   )
@@ -82,7 +82,7 @@ namespace
     return result;
   }
 
-  ulanova::Dictionary unionDicts(
+  ulanova::Dictionary makeUnion(
     const ulanova::Dictionary & lhs,
     const ulanova::Dictionary & rhs
   )
@@ -132,5 +132,56 @@ void ulanova::loadStorage(Storage & storage, const std::string & filename)
 
     storage.push(name, dict);
   }
+}
+
+void ulanova::complement(std::ostream &, std::istream & in, Storage & storage)
+{
+  std::string new_name;
+  std::string lhs_name;
+  std::string rhs_name;
+
+  if (!(in >> new_name >> lhs_name >> rhs_name))
+  {
+    throw std::runtime_error("invalid command");
+  }
+
+  Dictionary lhs = storage.get(lhs_name);
+  Dictionary rhs = storage.get(rhs_name);
+
+  storage.push(new_name, makeComplement(lhs, rhs));
+}
+
+void ulanova::intersect(std::ostream &, std::istream & in, Storage & storage)
+{
+  std::string new_name;
+  std::string lhs_name;
+  std::string rhs_name;
+
+  if (!(in >> new_name >> lhs_name >> rhs_name))
+  {
+    throw std::runtime_error("invalid command");
+  }
+
+  Dictionary lhs = storage.get(lhs_name);
+  Dictionary rhs = storage.get(rhs_name);
+
+  storage.push(new_name, makeIntersect(lhs, rhs));
+}
+
+void ulanova::unionDicts(std::ostream &, std::istream & in, Storage & storage)
+{
+  std::string new_name;
+  std::string lhs_name;
+  std::string rhs_name;
+
+  if (!(in >> new_name >> lhs_name >> rhs_name))
+  {
+    throw std::runtime_error("invalid command");
+  }
+
+  Dictionary lhs = storage.get(lhs_name);
+  Dictionary rhs = storage.get(rhs_name);
+
+  storage.push(new_name, makeUnion(lhs, rhs));
 }
 
