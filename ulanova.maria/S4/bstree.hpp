@@ -40,6 +40,8 @@ namespace ulanova
     size_t size() const noexcept;
     void clear() noexcept;
 
+    void push(const Key& key, const Value& value);
+
   private:
     detail::NodeBase* fake_root_;
     detail::NodeBase* fake_leaf_;
@@ -48,6 +50,12 @@ namespace ulanova
 
     void create_fakes();
     void clear_from(detail::NodeBase* node) noexcept;
+
+    using node_t = detail::Node< Key, Value >;
+
+    node_t * as_node(detail::NodeBase* node) const noexcept;
+    void update_height(detail::NodeBase* node) noexcept;
+    size_t get_height(detail::NodeBase* node) const noexcept;
   };
 }
 
@@ -133,6 +141,93 @@ void ulanova::BSTree< Key, Value, Compare >::clear_from(detail::NodeBase * node)
   clear_from(node->left);
   clear_from(node->right);
   delete node;
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::push(const Key & key, const Value & value)
+{
+  detail::NodeBase * parent = fake_root_;
+  detail::NodeBase * current = fake_root_->left;
+
+  while (current != fake_leaf_)
+  {
+    node_t * current_node = as_node(current);
+    parent = current;
+
+    if (compare_(key, current_node->data.first))
+    {
+      current = current->left;
+    }
+    else if (compare_(current_node->data.first, key))
+    {
+      current = current->right;
+    }
+    else
+    {
+      current_node->data.second = value;
+      return;
+    }
+  }
+
+  detail::NodeBase * new_node = new node_t(key, value, parent, fake_leaf_);
+
+  if (parent == fake_root_)
+  {
+    fake_root_->left = new_node;
+  }
+  else
+  {
+    node_t * parent_node = as_node(parent);
+    if (compare_(key, parent_node->data.first))
+    {
+      parent->left = new_node;
+    }
+    else
+    {
+      parent->right = new_node;
+    }
+  }
+
+  ++size_;
+
+  while (parent != nullptr)
+  {
+    update_height(parent);
+    parent = parent->parent;
+  }
+}
+
+template< class Key, class Value, class Compare >
+typename ulanova::BSTree< Key, Value, Compare >::node_t *
+ulanova::BSTree< Key, Value, Compare >::as_node(detail::NodeBase * node) const noexcept
+{
+  return static_cast< node_t * >(node);
+}
+
+template< class Key, class Value, class Compare >
+std::size_t ulanova::BSTree< Key, Value, Compare >::get_height(detail::NodeBase * node) const noexcept
+{
+  if (node == fake_leaf_)
+  {
+    return 0;
+  }
+  return node->height;
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::update_height(detail::NodeBase * node) noexcept
+{
+  const std::size_t left_height = get_height(node->left);
+  const std::size_t right_height = get_height(node->right);
+
+  if (left_height > right_height)
+  {
+    node->height = left_height + 1;
+  }
+  else
+  {
+    node->height = right_height + 1;
+  }
 }
 
 #endif
