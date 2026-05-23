@@ -398,7 +398,7 @@ ulanova::BSTreeConstIterator< Key, Value >::operator++()
       parent = parent->parent;
     }
 
-    if (parent == nullptr)
+    if ((parent == nullptr) || (parent->parent == nullptr))
     {
       node_ = fake_leaf_;
     }
@@ -506,7 +506,7 @@ ulanova::BSTree< Key, Value, Compare >::next_node(detail::NodeBase * node) const
     parent = parent->parent;
   }
 
-  if (parent == nullptr)
+  if ((parent == nullptr) || (parent->parent == nullptr))
   {
     return fake_leaf_;
   }
@@ -555,7 +555,7 @@ ulanova::BSTreeIterator< Key, Value >::operator++()
       parent = parent->parent;
     }
 
-    if (parent == nullptr)
+    if ((parent == nullptr) || (parent->parent == nullptr))
     {
       node_ = fake_leaf_;
     }
