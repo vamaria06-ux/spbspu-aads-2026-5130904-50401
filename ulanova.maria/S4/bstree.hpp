@@ -72,6 +72,9 @@ namespace ulanova
     const_iterator rotateLargeLeft(const_iterator it);
     const_iterator rotateLargeRight(const_iterator it);
 
+    BSTree(const BSTree & other);
+    BSTree & operator=(const BSTree & other);
+
   private:
     detail::NodeBase* fake_root_;
     detail::NodeBase* fake_leaf_;
@@ -98,6 +101,9 @@ namespace ulanova
 
     void rotate_left_node(detail::NodeBase * node);
     void rotate_right_node(detail::NodeBase * node);
+
+    void copy_from(detail::NodeBase * node, detail::NodeBase * other_fake_leaf);
+    void swap(BSTree & other) noexcept;
   };
 
   template< class Key, class Value >
@@ -856,6 +862,81 @@ void ulanova::BSTree< Key, Value, Compare >::rotate_right_node(detail::NodeBase 
 
   update_height(node);
   update_height(new_root);
+}
+
+template< class Key, class Value, class Compare >
+ulanova::BSTree< Key, Value, Compare >::BSTree(const BSTree & other):
+  fake_root_(nullptr),
+  fake_leaf_(nullptr),
+  size_(0),
+  compare_(other.compare_)
+{
+  create_fakes();
+
+  try
+  {
+    copy_from(other.fake_root_->left, other.fake_leaf_);
+  }
+  catch (...)
+  {
+    clear();
+    delete fake_root_;
+    delete fake_leaf_;
+    fake_root_ = nullptr;
+    fake_leaf_ = nullptr;
+    throw;
+  }
+}
+
+template< class Key, class Value, class Compare >
+ulanova::BSTree< Key, Value, Compare > &
+ulanova::BSTree< Key, Value, Compare >::operator=(const BSTree & other)
+{
+  if (this != &other)
+  {
+    BSTree temp(other);
+    swap(temp);
+  }
+
+  return *this;
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::swap(BSTree & other) noexcept
+{
+  detail::NodeBase * temp_root = fake_root_;
+  fake_root_ = other.fake_root_;
+  other.fake_root_ = temp_root;
+
+  detail::NodeBase * temp_leaf = fake_leaf_;
+  fake_leaf_ = other.fake_leaf_;
+  other.fake_leaf_ = temp_leaf;
+
+  size_t temp_size = size_;
+  size_ = other.size_;
+  other.size_ = temp_size;
+
+  Compare temp_compare = compare_;
+  compare_ = other.compare_;
+  other.compare_ = temp_compare;
+}
+
+template< class Key, class Value, class Compare >
+void ulanova::BSTree< Key, Value, Compare >::copy_from(
+  detail::NodeBase * node,
+  detail::NodeBase * other_fake_leaf
+)
+{
+  if (node == other_fake_leaf)
+  {
+    return;
+  }
+
+  node_t * typed_node = static_cast< node_t * >(node);
+
+  push(typed_node->data.first, typed_node->data.second);
+  copy_from(node->left, other_fake_leaf);
+  copy_from(node->right, other_fake_leaf);
 }
 
 #endif
