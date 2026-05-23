@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <utility>
+#include <stdexcept>
 
 namespace ulanova
 {
@@ -17,7 +18,7 @@ namespace ulanova
 
       NodeBase();
       NodeBase(NodeBase* parent_node, NodeBase* left_node, NodeBase* right_node);
-      virtual ~NodeBase() = default;
+      virtual ~NodeBase();
     };
 
     template< class Key, class Value >
@@ -42,6 +43,10 @@ namespace ulanova
 
     void push(const Key& key, const Value& value);
 
+    bool contains(const Key & key) const noexcept;
+    Value & at(const Key & key);
+    const Value & at(const Key & key) const;
+
   private:
     detail::NodeBase* fake_root_;
     detail::NodeBase* fake_leaf_;
@@ -56,6 +61,8 @@ namespace ulanova
     node_t * as_node(detail::NodeBase* node) const noexcept;
     void update_height(detail::NodeBase* node) noexcept;
     size_t get_height(detail::NodeBase* node) const noexcept;
+
+    detail::NodeBase * find_node(const Key & key) const noexcept;
   };
 }
 
@@ -228,6 +235,63 @@ void ulanova::BSTree< Key, Value, Compare >::update_height(detail::NodeBase * no
   {
     node->height = right_height + 1;
   }
+}
+
+template< class Key, class Value, class Compare >
+bool ulanova::BSTree< Key, Value, Compare >::contains(const Key & key) const noexcept
+{
+  return find_node(key) != fake_leaf_;
+}
+
+template< class Key, class Value, class Compare >
+Value & ulanova::BSTree< Key, Value, Compare >::at(const Key & key)
+{
+  detail::NodeBase * node = find_node(key);
+  if (node == fake_leaf_)
+  {
+    throw std::out_of_range("key not found");
+  }
+
+  return as_node(node)->data.second;
+}
+
+template< class Key, class Value, class Compare >
+const Value & ulanova::BSTree< Key, Value, Compare >::at(const Key & key) const
+{
+  detail::NodeBase * node = find_node(key);
+  if (node == fake_leaf_)
+  {
+    throw std::out_of_range("key not found");
+  }
+
+  return as_node(node)->data.second;
+}
+
+template< class Key, class Value, class Compare >
+ulanova::detail::NodeBase *
+ulanova::BSTree< Key, Value, Compare >::find_node(const Key & key) const noexcept
+{
+  detail::NodeBase * current = fake_root_->left;
+
+  while (current != fake_leaf_)
+  {
+    node_t * current_node = as_node(current);
+
+    if (compare_(key, current_node->data.first))
+    {
+      current = current->left;
+    }
+    else if (compare_(current_node->data.first, key))
+    {
+      current = current->right;
+    }
+    else
+    {
+      return current;
+    }
+  }
+
+  return fake_leaf_;
 }
 
 #endif
