@@ -39,7 +39,7 @@ void ulanova::print(std::ostream & out, std::istream & in, Storage & storage)
 
 namespace
 {
-  ulanova::Dictionary makeComplement(
+  ulanova::Dictionary complement(
     const ulanova::Dictionary & lhs,
     const ulanova::Dictionary & rhs
   )
@@ -61,7 +61,7 @@ namespace
     return result;
   }
 
-  ulanova::Dictionary makeIntersect(
+  ulanova::Dictionary intersect(
     const ulanova::Dictionary & lhs,
     const ulanova::Dictionary & rhs
   )
@@ -82,7 +82,7 @@ namespace
     return result;
   }
 
-  ulanova::Dictionary makeUnion(
+  ulanova::Dictionary unionDicts(
     const ulanova::Dictionary & lhs,
     const ulanova::Dictionary & rhs
   )
