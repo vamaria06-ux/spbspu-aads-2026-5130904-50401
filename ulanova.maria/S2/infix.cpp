@@ -30,6 +30,10 @@ ulanova::Queue< std::string > ulanova::infix_to_postfix(const std::string& expr)
       output.push(std::string(1, ops.front()));
       ops.pop();
       }
+      if (ops.empty())
+      {
+        throw std::runtime_error("incorrect expression");
+      }
       ops.pop();
   }
   else
@@ -37,11 +41,21 @@ ulanova::Queue< std::string > ulanova::infix_to_postfix(const std::string& expr)
       char op = token[0];
       while (!ops.empty() && priority(ops.front()) >= priority(op))
       {
-      output.push(std::string(1, ops.front()));
-      ops.pop();
+        output.push(std::string(1, ops.front()));
+        ops.pop();
       }
       ops.push(op);
   }
+  }
+  while (!ops.empty())
+  {
+    if (ops.front() == '(')
+    {
+      throw std::runtime_error("incorrect expression");
+    }
+
+    output.push(std::string(1, ops.front()));
+    ops.pop();
   }
   return output;
 }
