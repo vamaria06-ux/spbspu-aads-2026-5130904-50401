@@ -1,6 +1,5 @@
 #ifndef MATH_FUNCTIONS_HPP
 #define MATH_FUNCTIONS_HPP
-#include <stdexcept>
 
 namespace ulanova
 {

@@ -1,5 +1,5 @@
-#include "math_functions.hpp"
 #include <boost/test/unit_test.hpp>
+#include "math_functions.hpp"
 
 BOOST_AUTO_TEST_CASE(test_operations)
 {
