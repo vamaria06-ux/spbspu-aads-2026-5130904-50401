@@ -39,17 +39,13 @@ int main(int argc, char* argv[])
     }
     if (!results.empty())
     {
-      bool first = true;
-      while (!results.empty())
-      {
-        if (!first)
-        {
-          std::cout << " ";
-        }
-        std::cout << results.front();
-        results.pop();
-        first = false;
-      }
+      std::cout << results.front();
+      results.pop();
+    }
+    while (!results.empty())
+    {
+      std::cout << " " << results.front();
+      results.pop();
     }
     std::cout << "\n";
   } catch (const std::exception& e)
