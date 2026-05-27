@@ -5,29 +5,14 @@
 #include <sstream>
 #include <string>
 
-long long ulanova::postfix(const std::string& expr)
+long long ulanova::postfix(Queue< std::string >& expr)
 {
   Stack< long long > stack;
-  size_t pos = 0;
 
-  while (pos < expr.size())
+  while (!expr.empty())
   {
-    while (pos < expr.size() && expr[pos] == ' ')
-    {
-      ++pos;
-    }
-
-    if (pos == expr.size())
-    {
-      break;
-    }
-
-    size_t end = pos;
-    while (end < expr.size() && expr[end] != ' ')
-    {
-      ++end;
-    }
-    std::string token = expr.substr(pos, end - pos);
+    std::string token = expr.front();
+    expr.pop();
 
     if (token.size() == 1 && is_operator(token[0]))
     {
@@ -43,7 +28,6 @@ long long ulanova::postfix(const std::string& expr)
     {
       stack.push(std::stoll(token));
     }
-    pos = end;
   }
   long long result = stack.front();
   stack.pop();

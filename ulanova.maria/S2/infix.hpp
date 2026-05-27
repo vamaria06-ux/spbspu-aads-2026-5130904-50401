@@ -9,6 +9,6 @@
 
 namespace ulanova
 {
-  std::string infix_to_postfix(const std::string& expr);
+  Queue< std::string > infix_to_postfix(const std::string& expr);
 }
 #endif

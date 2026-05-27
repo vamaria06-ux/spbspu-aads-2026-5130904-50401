@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-std::string ulanova::infix_to_postfix(const std::string& expr)
+ulanova::Queue< std::string > ulanova::infix_to_postfix(const std::string& expr)
 {
   Stack<char> ops;
   Queue<std::string> output;
@@ -43,16 +43,5 @@ std::string ulanova::infix_to_postfix(const std::string& expr)
       ops.push(op);
   }
   }
-  while (!ops.empty())
-  {
-  output.push(std::string(1, ops.front()));
-  ops.pop();
-  }
-  std::string result;
-  while (!output.empty())
-  {
-  result += output.front() + " ";
-  output.pop();
-  }
-  return result;
+  return output;
 }
