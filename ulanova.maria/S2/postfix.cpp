@@ -37,7 +37,7 @@ long long ulanova::postfix(const std::string& expr)
       long long a = stack.front();
       stack.pop();
 
-      long long res = apply_op(a, b, token[0]);
+      stack.push(apply_op(a, b, token[0]));
     }
     else
     {
