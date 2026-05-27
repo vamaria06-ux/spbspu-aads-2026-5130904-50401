@@ -15,7 +15,8 @@ namespace ulanova
     void clear();
     T drop();
     T& front();
-    bool empty();
+    const T& front() const;
+    bool empty() const;
   private:
     List< T > list_;
   };
@@ -47,7 +48,6 @@ namespace ulanova
     }
     T value = list_.front();
     list_.pop_front();
-    return value;
   }
   template < class T >
   T& Stack< T >::front()
@@ -59,7 +59,16 @@ namespace ulanova
     return list_.front();
   }
   template < class T >
-  bool Stack< T >::empty()
+  const T& Stack< T >::front() const
+  {
+    if(empty())
+    {
+      throw std::runtime_error("Stack is empty");
+    }
+    return list_.front();
+  }
+  template < class T >
+  bool Stack< T >::empty() const
   {
     return list_.empty();
   }

@@ -104,9 +104,9 @@ namespace ulanova
     ~List();
     List(const List& other);
 
-    void push_front(const T& value) noexcept;
+    void push_front(const T& value);
     void push_front(T&& value);
-    void push_back(const T& value) noexcept;
+    void push_back(const T& value);
     void push_back(T&& value);
     void pop_front() noexcept;
 
@@ -138,7 +138,7 @@ namespace ulanova
 
 
   template < class T >
-  void List< T >::push_front(const T& value) noexcept
+  void List< T >::push_front(const T& value)
   {
     Node< T >* new_node = new Node< T >{value,nullptr};
     if (!head)
@@ -157,7 +157,7 @@ namespace ulanova
     head = new_node;
   }
   template< class T >
-  void List< T >::push_front(T&& value) noexcept
+  void List< T >::push_front(T&& value)
   {
     Node< T >* new_node = new Node< T >{std::move(value), nullptr};
     if (!head)
@@ -176,7 +176,7 @@ namespace ulanova
     head = new_node;
   }
   template < class T >
-  void List< T >::push_back(const T& value) noexcept
+  void List< T >::push_back(const T& value)
   {
     Node< T >* new_node = new Node< T >{value,nullptr};
     if(!head)
@@ -194,7 +194,7 @@ namespace ulanova
     new_node -> next = head;
   }
   template< class T >
-  void List< T >::push_back(T&& value) noexcept
+  void List< T >::push_back(T&& value)
   {
     Node< T >* new_node = new Node< T >{std::move(value), nullptr};
     if (!head)
