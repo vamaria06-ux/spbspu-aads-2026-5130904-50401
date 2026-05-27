@@ -1,0 +1,75 @@
+#ifndef STACK_HPP
+#define STACK_HPP
+#include <list.hpp>
+#include <stdexcept>
+#include <utility>
+
+namespace ulanova
+{
+  template < class T >
+  class Stack
+  {
+  public:
+    void push(const T& value);
+    void push(T&& value);
+    void clear();
+    void pop();
+    T& front();
+    const T& front() const;
+    bool empty() const;
+  private:
+    List< T > list_;
+  };
+
+  template < class T >
+  void Stack< T >::push(const T& value)
+  {
+    list_.push_front(value);
+  }
+  template< class T >
+  void Stack< T >::push(T&& value)
+  {
+    list_.push_front(std::move(value));
+  }
+  template < class T >
+  void Stack< T >::clear()
+  {
+    while (!empty())
+    {
+      pop();
+    }
+  }
+  template < class T >
+  void Stack< T >::pop()
+  {
+    if (empty())
+    {
+      throw std::runtime_error("Stack is empty");
+    }
+    list_.pop_front();
+  }
+  template < class T >
+  T& Stack< T >::front()
+  {
+    if(empty())
+    {
+      throw std::runtime_error("Stack is empty");
+    }
+    return list_.front();
+  }
+  template < class T >
+  const T& Stack< T >::front() const
+  {
+    if(empty())
+    {
+      throw std::runtime_error("Stack is empty");
+    }
+    return list_.front();
+  }
+  template < class T >
+  bool Stack< T >::empty() const
+  {
+    return list_.empty();
+  }
+}
+#endif
