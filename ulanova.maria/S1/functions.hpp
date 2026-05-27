@@ -1,9 +1,7 @@
-#ifndef LIST_HPP
-#define LIST_HPP
 #include <iostream>
 #include <string>
 #include <cstddef>
-#include "list.hpp"
+#include <list.hpp>
 namespace ulanova
 {
   struct Sequence
@@ -18,4 +16,3 @@ namespace ulanova
   void print_sequences(const List<List<size_t>>& seqs);
   void print_sums(const List<size_t>& sums);
 }
-#endif
