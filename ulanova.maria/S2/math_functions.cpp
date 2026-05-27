@@ -57,7 +57,8 @@ long long ulanova::apply_op(long long a, long long b, char op)
         throw std::runtime_error("modul by zero");
       }
       return ((a % b) + b) % b;
-    case '^': return a ^ b;
+    case '^':
+      return a ^ b;
     default:
       throw std::runtime_error("unknown operator");
   }
