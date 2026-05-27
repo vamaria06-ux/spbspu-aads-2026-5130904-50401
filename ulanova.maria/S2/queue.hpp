@@ -9,15 +9,13 @@ namespace ulanova
   template <class T>
   class Queue
   {
-  private:
-    List<T> list;
   public:
-    Queue() = default;
-
     void push(const T& value);
     void clear();
     T drop();
     bool empty() const;
+  private:
+    List<T> list;
   };
 
   template <class T>

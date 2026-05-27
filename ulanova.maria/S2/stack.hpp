@@ -8,16 +8,14 @@ namespace ulanova
   template <class T>
   class Stack
   {
-  private:
-    List<T> list;
   public:
-    Stack() = default;
-
     void push(const T& value);
     void clear();
     T drop();
     T& front();
     bool empty();
+  private:
+    List<T> list;
   };
 
   template <class T>
