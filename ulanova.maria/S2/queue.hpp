@@ -3,36 +3,43 @@
 
 #include <list.hpp>
 #include <stdexcept>
+#include <utility>
 
 namespace ulanova
 {
-  template <class T>
+  template < class T >
   class Queue
   {
   public:
     void push(const T& value);
+    void push(T&& value);
     void clear();
     T drop();
     bool empty() const;
   private:
-    List<T> list_;
+    List< T > list_;
   };
 
-  template <class T>
-  void Queue<T>::push(const T& value)
+  template < class T >
+  void Queue< T >::push(const T& value)
   {
     list_.push_back(value);
   }
-  template <class T>
-  void Queue<T>:: clear()
+  template < class T >
+  void Queue< T >::push(T&& value)
+  {
+    list_.push_back(std::move(value));
+  }
+  template < class T >
+  void Queue< T >:: clear()
   {
     while (!empty())
     {
       drop();
     }
   }
-  template <class T>
-  T Queue<T>::drop()
+  template < class T >
+  T Queue< T >::drop()
   {
     if (empty())
     {
@@ -42,8 +49,8 @@ namespace ulanova
     list_.pop_front();
     return value;
   }
-  template <class T>
-  bool Queue<T>::empty() const
+  template < class T >
+  bool Queue< T >::empty() const
   {
     return list_.empty();
   }
