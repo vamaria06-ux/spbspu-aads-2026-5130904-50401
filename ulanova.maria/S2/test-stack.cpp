@@ -9,9 +9,12 @@ BOOST_AUTO_TEST_CASE(test_push_pop_stack)
   s.push(2);
   s.push(3);
 
-  BOOST_CHECK(s.drop() == 3);
-  BOOST_CHECK(s.drop() == 2);
-  BOOST_CHECK(s.drop() == 1);
+  BOOST_CHECK(s.front() == 3);
+  s.pop();
+  BOOST_CHECK(s.front() == 2);
+  s.pop();
+  BOOST_CHECK(s.front() == 1);
+  s.pop();
 }
 BOOST_AUTO_TEST_CASE(test_empty_stack)
 {
@@ -19,7 +22,7 @@ BOOST_AUTO_TEST_CASE(test_empty_stack)
   BOOST_CHECK(s.empty());
   s.push(10);
   BOOST_CHECK(!(s.empty()));
-  s.drop();
+  s.pop();
   BOOST_CHECK(s.empty());
 }
 BOOST_AUTO_TEST_CASE(test_clear_stack)
@@ -34,7 +37,7 @@ BOOST_AUTO_TEST_CASE(test_clear_stack)
 BOOST_AUTO_TEST_CASE(test_exception_stack)
 {
   ulanova::Stack<size_t> s;
-  BOOST_CHECK_THROW(s.drop(), std::runtime_error);
+  BOOST_CHECK_THROW(s.pop(), std::runtime_error);
 }
 BOOST_AUTO_TEST_CASE(test_top)
 {
@@ -42,6 +45,7 @@ BOOST_AUTO_TEST_CASE(test_top)
   s.push(5);
   s.push(10);
   BOOST_CHECK(s.front() == 10);
-  BOOST_CHECK(s.drop() == 10);
+  BOOST_CHECK(s.front() == 10);
+  s.pop();
   BOOST_CHECK(s.front() == 5);
 }
