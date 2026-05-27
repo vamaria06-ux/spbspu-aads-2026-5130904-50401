@@ -8,11 +8,27 @@
 long long ulanova::postfix(const std::string& expr)
 {
   Stack< long long > stack;
-  std::stringstream s(expr);
-  std::string token;
+  size_t pos = 0;
 
-  while (s >> token)
+  while (pos < expr.size())
   {
+    while (pos < expr.size() && expr[pos] == ' ')
+    {
+      ++pos;
+    }
+
+    if (pos == expr.size())
+    {
+      break;
+    }
+
+    size_t end = pos;
+    while (end < expr.size() && expr[end] != ' ')
+    {
+      ++end;
+    }
+    std::string token = expr.substr(pos, end - pos);
+
     if (token.size() == 1 && is_operator(token[0]))
     {
       long long b = stack.front();
@@ -22,15 +38,13 @@ long long ulanova::postfix(const std::string& expr)
       stack.pop();
 
       long long res = apply_op(a, b, token[0]);
-      stack.push(res);
     }
     else
     {
-      long long value = std::stoll(token);
-      stack.push(value);
+      stack.push(std::stoll(token));
     }
+    pos = end;
   }
-
   long long result = stack.front();
   stack.pop();
   return result;
