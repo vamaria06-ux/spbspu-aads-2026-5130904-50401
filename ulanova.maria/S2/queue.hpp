@@ -14,7 +14,9 @@ namespace ulanova
     void push(const T& value);
     void push(T&& value);
     void clear();
-    T drop();
+    T& front();
+    const T& front() const;
+    void pop();
     bool empty() const;
   private:
     List< T > list_;
@@ -38,16 +40,33 @@ namespace ulanova
       drop();
     }
   }
-  template < class T >
-  T Queue< T >::drop()
+  template< class T >
+  T& Queue< T >::front()
   {
     if (empty())
     {
       throw std::runtime_error("Queue is empty");
     }
-    T value = list_.front();
+    return list_.front();
+  }
+
+  template< class T >
+  const T& Queue< T >::front() const
+  {
+    if (empty())
+    {
+      throw std::runtime_error("Queue is empty");
+    }
+    return list_.front();
+  }
+  template < class T >
+  void Queue< T >::pop()
+  {
+    if (empty())
+    {
+      throw std::runtime_error("Queue is empty");
+    }
     list_.pop_front();
-    return value;
   }
   template < class T >
   bool Queue< T >::empty() const

@@ -31,28 +31,32 @@ namespace ulanova
       {
         while (!ops.empty() && ops.front() != '(')
         {
-          output.push(std::string(1, ops.drop()));
+          output.push(std::string(1, ops.front()));
+          ops.pop();
         }
-        ops.drop();
+        ops.pop();
       }
       else
       {
         char op = token[0];
         while (!ops.empty() && priority(ops.front()) >= priority(op))
         {
-          output.push(std::string(1, ops.drop()));
+          output.push(std::string(1, ops.front()));
+          ops.pop();
         }
         ops.push(op);
       }
     }
     while (!ops.empty())
     {
-      output.push(std::string(1, ops.drop()));
+      output.push(std::string(1, ops.front()));
+      ops.pop();
     }
     std::string result;
     while (!output.empty())
     {
-      result += output.drop() + " ";
+      result += output.front() + " ";
+      output.pop();
     }
     return result;
   }

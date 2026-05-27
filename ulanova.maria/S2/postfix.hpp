@@ -17,8 +17,10 @@ namespace ulanova
     {
       if (token.size() == 1 && is_operator(token[0]))
       {
-        long long b = stack.drop();
-        long long a = stack.drop();
+        long long b = stack.front();
+        stack.pop();
+        long long a = stack.front();
+        stack.pop();
         long long res = apply_op(a, b, token[0]);
         stack.push(res);
       }
@@ -28,7 +30,9 @@ namespace ulanova
         stack.push(value);
       }
     }
-    return stack.drop();
+    long long result = stack.front();
+    stack.pop();
+    return result;
   }
 }
 #endif

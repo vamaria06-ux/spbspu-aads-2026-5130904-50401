@@ -13,7 +13,7 @@ namespace ulanova
     void push(const T& value);
     void push(T&& value);
     void clear();
-    T drop();
+    void pop();
     T& front();
     const T& front() const;
     bool empty() const;
@@ -40,13 +40,12 @@ namespace ulanova
     }
   }
   template < class T >
-  T Stack< T >::drop()
+  void Stack< T >::pop()
   {
     if (empty())
     {
       throw std::runtime_error("Stack is empty");
     }
-    T value = list_.front();
     list_.pop_front();
   }
   template < class T >

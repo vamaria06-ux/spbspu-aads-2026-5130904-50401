@@ -122,6 +122,7 @@ namespace ulanova
     void clear();
 
     T& front();
+    const T& front() const;
     bool empty() const;
   };
 
@@ -243,6 +244,16 @@ namespace ulanova
       throw std::logic_error("empty list");
     }
     return head -> data;
+  }
+
+  template< class T >
+  const T& List< T >::front() const
+  {
+    if (!head)
+    {
+      throw std::logic_error("empty list");
+    }
+    return head->data;
   }
 
   template < class T >
