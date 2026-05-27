@@ -47,7 +47,8 @@ int main(int argc, char* argv[])
         {
           std::cout << " ";
         }
-        std::cout << results.drop();
+        std::cout << results.front();
+        results.pop();
         first = false;
       }
     }

@@ -37,7 +37,7 @@ namespace ulanova
   {
     while (!empty())
     {
-      drop();
+      pop();
     }
   }
   template< class T >
