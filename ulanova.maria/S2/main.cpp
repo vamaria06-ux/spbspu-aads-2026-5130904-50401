@@ -8,7 +8,12 @@ int main(int argc, char* argv[])
 {
   std::istream* input = &std::cin;
   std::ifstream file;
-  if (argc > 1)
+  if (argc > 2)
+  {
+    std::cerr << "wrong arguments\n";
+    return 1;
+  }
+  if (argc == 2)
   {
     file.open(argv[1]);
     if (!file.is_open())
@@ -16,13 +21,7 @@ int main(int argc, char* argv[])
       std::cerr << "cannot open file\n";
       return 1;
     }
-    if (file.peek() == EOF)
-    {
-    }
-    else
-    {
-      input = &file;
-    }
+    input = &file;
   }
   ulanova::Stack<long long> results;
   std::string line;
@@ -34,7 +33,7 @@ int main(int argc, char* argv[])
       {
         continue;
       }
-      std::string postfix = ulanova::infix_to_postfix(line);
+      ulanova::Queue< std::string > postfix = ulanova::infix_to_postfix(line);
       long long result = ulanova::postfix(postfix);
       results.push(result);
     }
