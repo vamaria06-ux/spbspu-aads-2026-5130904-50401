@@ -15,13 +15,13 @@ namespace ulanova
     T drop();
     bool empty() const;
   private:
-    List<T> list;
+    List<T> list_;
   };
 
   template <class T>
   void Queue<T>::push(const T& value)
   {
-    list.push_back(value);
+    list_.push_back(value);
   }
   template <class T>
   void Queue<T>:: clear()
@@ -38,14 +38,14 @@ namespace ulanova
     {
       throw std::runtime_error("Queue is empty");
     }
-    T value = list.front();
-    list.pop_front();
+    T value = list_.front();
+    list_.pop_front();
     return value;
   }
   template <class T>
   bool Queue<T>::empty() const
   {
-    return list.empty();
+    return list_.empty();
   }
 }
 #endif

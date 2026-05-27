@@ -15,13 +15,13 @@ namespace ulanova
     T& front();
     bool empty();
   private:
-    List<T> list;
+    List<T> list_;
   };
 
   template <class T>
   void Stack<T>::push(const T& value)
   {
-    list.push_front(value);
+    list_.push_front(value);
   }
   template <class T>
   void Stack<T>::clear()
@@ -38,8 +38,8 @@ namespace ulanova
     {
       throw std::runtime_error("Stack is empty");
     }
-    T value = list.front();
-    list.pop_front();
+    T value = list_.front();
+    list_.pop_front();
     return value;
   }
   template <class T>
@@ -49,12 +49,12 @@ namespace ulanova
     {
       throw std::runtime_error("Stack is empty");
     }
-    return list.front();
+    return list_.front();
   }
   template <class T>
   bool Stack<T>::empty()
   {
-    return list.empty();
+    return list_.empty();
   }
 }
 #endif
