@@ -7,7 +7,7 @@ bool ulanova::is_operator(char c)
 {
   return c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '^';
 }
-int priority(char op)
+int ulanova::priority(char op)
 {
   if (op == '+' || op == '-' || op == '^')
   {
