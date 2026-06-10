@@ -580,3 +580,4 @@ BOOST_AUTO_TEST_CASE(partition_all_false_test)
   ++it;
   BOOST_CHECK(it == list.end());
 }
+
